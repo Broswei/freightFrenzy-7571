@@ -22,8 +22,6 @@ public class GlobalVars {
     public static double worldYPosition = 0.0;
     public static double worldAngle_rad = 0.0;
 
-    public static double shooterMultiplier = 0.5;
-
     public static double currentXTicks = 0;
     public static double currentYTicks = 0;
 

@@ -28,7 +28,6 @@ import static org.firstinspires.ftc.teamcode.lib.util.GlobalVars.currentYTicks;
 import static org.firstinspires.ftc.teamcode.lib.util.GlobalVars.mTolerance;
 import static org.firstinspires.ftc.teamcode.lib.util.GlobalVars.mainGp;
 import static org.firstinspires.ftc.teamcode.lib.util.GlobalVars.roboState;
-import static org.firstinspires.ftc.teamcode.lib.util.GlobalVars.shooterMultiplier;
 import static org.firstinspires.ftc.teamcode.lib.util.GlobalVars.worldAngle_rad;
 import static org.firstinspires.ftc.teamcode.lib.util.GlobalVars.worldXPosition;
 import static org.firstinspires.ftc.teamcode.lib.util.GlobalVars.worldYPosition;
@@ -106,8 +105,6 @@ public class Robot extends OpMode{
   @Override
   public void init_loop(){
     dt.initGyro(gyro);
-
-    telemetry.addLine("Shooter power: " + shooterMultiplier);
     telemetry.update();
 
     //fm.setTarget(false);
@@ -159,8 +156,6 @@ public class Robot extends OpMode{
 
     //telemetry.addLine("positions set!");
 
-
-    telemetry.addLine("Shooter power: " + shooterMultiplier);
     telemetry.addLine("Gyro: " + dt.getGyroRotation(AngleUnit.DEGREES));
 
     /*
