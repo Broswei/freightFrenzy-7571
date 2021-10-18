@@ -12,6 +12,8 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.lib.hardware.manip.Intake;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 import java.text.DecimalFormat;
@@ -56,17 +58,11 @@ public class Robot extends OpMode{
 
   public DecimalFormat df = new DecimalFormat("###.###");
 
-  //private RevBulkData revExpansionMasterBulkData;
-
-  //private ExpansionHubEx revMaster;
-  // used in future if you need bulk reads from the other hub
-  //private ExpansionHubEx revSlave;
-
   private DcMotor[] motors;
 
   public DriveTrain dt = new DriveTrain();
-  public DcMotorEx wobbleArm;
-  public Servo wobbleServo;
+  public Intake intake = new Intake();
+  public DcMotorEx lift;
   public BNO055IMU gyro;
   //public Loader loader = new Loader();
 
@@ -78,11 +74,6 @@ public class Robot extends OpMode{
   @Override
   public void init() {
 
-    //RevExtensions2.init();
-
-    //revMaster = hardwareMap.get(ExpansionHubEx.class,"Expansion Hub 6");
-    //revSlave = hardwareMap.get(ExpansionHubEx.class,"Expansion Hub 9");
-
     motors = new DcMotor[]{hardwareMap.dcMotor.get("fl"), hardwareMap.dcMotor.get("fr"), hardwareMap.dcMotor.get("bl"), hardwareMap.dcMotor.get("br")};
     
     //stores gamepads in global variables
@@ -93,12 +84,9 @@ public class Robot extends OpMode{
     
     dt.initMotors(motors);
     //fm.init(hardwareMap.get(Servo.class, "fmLeft"), hardwareMap.get(Servo.class, "fmRight"));
-    wobbleArm = hardwareMap.get(DcMotorEx.class, "wobbleArm");
-    wobbleServo = hardwareMap.get(Servo.class, "wobbleServo");
     gyro = hardwareMap.get(BNO055IMU.class, "imu");
-    //elevator.init(hardwareMap.get(DcMotor.class, "elevator"));
-    //loader.init(hardwareMap.get(Servo.class, "loader"));
-    //clamp.init(hardwareMap.get(Servo.class, "plate"), hardwareMap.get(Servo.class, "nub"));
+    intake.init(hardwareMap.get(DcMotor.class, "intake"));
+    lift = hardwareMap.get(DcMotorEx.class, "lift");
 
   }
 
@@ -136,66 +124,10 @@ public class Robot extends OpMode{
     } else {
         dt.applyMovement();
     }
-    //intake.update();
-    //shooter.update();
-    /*fm.update();
-    elevator.update();
-    depositor.update();
-    clamp.update();
-*/
-    //fetch our rotation in radians from the imu
-    //worldAngle_rad = Double.parseDouble(df.format(AngleWrap(dt.getGyroRotation(AngleUnit.RADIANS))));
 
 
-
-    //update our auto states
-    //updateAutoState(); //this is currently done inside the opmode instance
-    
-    //update our robot states
-    //updateAtTargetAlt();
-
-    //telemetry.addLine("positions set!");
-
-    telemetry.addLine("Gyro: " + dt.getGyroRotation(AngleUnit.DEGREES));
-
-    /*
-    //telemetry.addLine("wa: " + Math.toDegrees(worldAngle_rad));
-    telemetry.addLine("");
-   // telemetry.addLine("r: " + dt.fr.getCurrentPosition());
-   // telemetry.addLine("a: " + dt.bl.getCurrentPosition());
-    //telemetry.addLine("");
-    //telemetry.addLine("auto state: " + auto);
-      telemetry.addLine("");
-      telemetry.addLine("auto color: " + autoType);
-    telemetry.addLine("");
-    telemetry.addLine("robot state: " + roboState);
-    telemetry.addLine("");
-    telemetry.addLine("auto state: " + autoStateLZ);
-    telemetry.addLine("");
-    //telemetry.addLine("strafe const: " + strafeConstant);
-
-    //telemetry.addLine("targetX: " + xTarget);
-    //telemetry.addLine("targetY: " + yTarget);
-
-    telemetry.addLine("");
-    telemetry.addLine("deposit target: " + depositor.getTarget());
-    //telemetry.addLine("");
-    //telemetry.addLine("elevator target: " + elevator.getTarget());
-
-
-*/
+    telemetry.addLine("Lift: " + lift.getCurrentPosition());
     telemetry.update();
-
-
-
-   /* packet.put("wx", worldXPosition);
-    packet.put("wy", worldYPosition);
-    packet.put("wa", Math.toDegrees(worldAngle_rad));
-    packet.put("auto", auto);
-    packet.put("autostate", autoState);
-    packet.put("robot state", roboState);*/
-
-    //dashboard.sendTelemetryPacket(packet);
 
   }
 
