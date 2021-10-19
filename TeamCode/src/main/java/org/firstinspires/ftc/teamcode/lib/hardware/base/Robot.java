@@ -6,6 +6,7 @@ package org.firstinspires.ftc.teamcode.lib.hardware.base;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -64,7 +65,8 @@ public class Robot extends OpMode{
   public Intake intake = new Intake();
   public DcMotorEx lift;
   public BNO055IMU gyro;
-  //public Loader loader = new Loader();
+  public CRServo pushServo;
+  public CRServo platServo;
 
   public static ElapsedTime timer = new ElapsedTime();
 
@@ -87,6 +89,8 @@ public class Robot extends OpMode{
     gyro = hardwareMap.get(BNO055IMU.class, "imu");
     intake.init(hardwareMap.get(DcMotor.class, "intake"));
     lift = hardwareMap.get(DcMotorEx.class, "lift");
+    pushServo = hardwareMap.get(CRServo.class, "pushServo");
+    platServo = hardwareMap.get(CRServo.class,"platServo");
 
   }
 
@@ -126,7 +130,11 @@ public class Robot extends OpMode{
     }
 
 
+
     telemetry.addLine("Lift: " + lift.getCurrentPosition());
+    telemetry.addLine("Pusher: " + pushServo.getDirection());
+    telemetry.addLine("Platform: " + platServo.getDirection());
+    telemetry.addLine("Push Power: " + pushServo.getPower());
     telemetry.update();
 
   }

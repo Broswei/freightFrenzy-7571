@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.lib.hardware.base.Robot;
@@ -82,6 +84,12 @@ private ElapsedTime timer=new ElapsedTime();
             lift.setTargetPosition(900);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             lift.setVelocity(600);
+        }
+
+        if(gamepad2.left_bumper){
+            pushServo.setPower(-1);
+        }else{
+            pushServo.setPower(0);
         }
 
         telemetry.update();
