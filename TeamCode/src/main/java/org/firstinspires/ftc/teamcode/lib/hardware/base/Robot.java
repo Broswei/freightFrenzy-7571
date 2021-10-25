@@ -67,6 +67,8 @@ public class Robot extends OpMode{
   public BNO055IMU gyro;
   public CRServo pushServo;
   public CRServo platServo;
+  public CRServo midServo;
+  public Servo rampServo;
 
   public static ElapsedTime timer = new ElapsedTime();
 
@@ -91,6 +93,8 @@ public class Robot extends OpMode{
     lift = hardwareMap.get(DcMotorEx.class, "lift");
     pushServo = hardwareMap.get(CRServo.class, "pushServo");
     platServo = hardwareMap.get(CRServo.class,"platServo");
+    midServo = hardwareMap.get(CRServo.class, "midServo");
+    rampServo = hardwareMap.get(Servo.class, "rampServo");
 
   }
 
@@ -135,6 +139,8 @@ public class Robot extends OpMode{
     telemetry.addLine("Pusher: " + pushServo.getDirection());
     telemetry.addLine("Platform: " + platServo.getDirection());
     telemetry.addLine("Push Power: " + pushServo.getPower());
+    telemetry.addLine("Middle Servo: " + midServo.getPower());
+    telemetry.addLine("Ramp Servo: " + rampServo.getPosition());
     telemetry.update();
 
   }

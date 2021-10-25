@@ -16,7 +16,7 @@ private boolean yButton2Toggle=false;
 
         boolean test=true;
 
-        boolean isSlow=false;
+        boolean isSlow = false;
 
 private ElapsedTime timer=new ElapsedTime();
 
@@ -41,13 +41,9 @@ private ElapsedTime timer=new ElapsedTime();
         super.loop();
 
         if(gamepad1.left_trigger>=0.01){
-
-        isSlow=true;
-
-        }
-
-        else{
-        isSlow=false;
+            isSlow=true;
+        }else{
+            isSlow=false;
         }
 
         //Drivetrain control
@@ -75,21 +71,41 @@ private ElapsedTime timer=new ElapsedTime();
         }
         //lift level 2 position on x
         else if(gamepad2.x){
-            lift.setTargetPosition(500);
+            lift.setTargetPosition(550);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             lift.setVelocity(600);
         }
         //lift level 3 position on y
         else if(gamepad2.y) {
-            lift.setTargetPosition(900);
+            lift.setTargetPosition(910);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             lift.setVelocity(600);
         }
-
         if(gamepad2.left_bumper){
             pushServo.setPower(-1);
         }else{
             pushServo.setPower(0);
+        }
+
+        if (gamepad2.left_trigger > 0){
+            platServo.setPower(0.5);
+        }
+        else{
+            platServo.setPower(0);
+        }
+
+        if (gamepad1.right_trigger > 0){
+            midServo.setPower(-1);
+        }
+        else{
+            midServo.setPower(0.25);
+        }
+
+        if (gamepad1.right_bumper){
+            rampServo.setPosition(.8);
+        }
+        if(gamepad1.left_bumper){
+            rampServo.setPosition(.95);
         }
 
         telemetry.update();
