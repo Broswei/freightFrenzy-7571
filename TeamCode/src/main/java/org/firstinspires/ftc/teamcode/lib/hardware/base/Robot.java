@@ -65,9 +65,9 @@ public class Robot extends OpMode{
   public Intake intake = new Intake();
   public DcMotorEx lift;
   public BNO055IMU gyro;
-  public CRServo pushServo;
-  public CRServo platServo;
-  public CRServo midServo;
+  public Servo pushServo;
+  public Servo platServo;
+  public Servo midServo;
   public Servo rampServo;
 
   public static ElapsedTime timer = new ElapsedTime();
@@ -91,9 +91,9 @@ public class Robot extends OpMode{
     gyro = hardwareMap.get(BNO055IMU.class, "imu");
     intake.init(hardwareMap.get(DcMotor.class, "intake"));
     lift = hardwareMap.get(DcMotorEx.class, "lift");
-    pushServo = hardwareMap.get(CRServo.class, "pushServo");
-    platServo = hardwareMap.get(CRServo.class,"platServo");
-    midServo = hardwareMap.get(CRServo.class, "midServo");
+    pushServo = hardwareMap.get(Servo.class, "pushServo");
+    platServo = hardwareMap.get(Servo.class,"platServo");
+    midServo = hardwareMap.get(Servo.class, "midServo");
     rampServo = hardwareMap.get(Servo.class, "rampServo");
 
   }
@@ -136,10 +136,9 @@ public class Robot extends OpMode{
 
 
     telemetry.addLine("Lift: " + lift.getCurrentPosition());
-    telemetry.addLine("Pusher: " + pushServo.getDirection());
-    telemetry.addLine("Platform: " + platServo.getDirection());
-    telemetry.addLine("Push Power: " + pushServo.getPower());
-    telemetry.addLine("Middle Servo: " + midServo.getPower());
+    telemetry.addLine("Platform Servo: " + platServo.getPosition());
+    telemetry.addLine("Push Servo: " + pushServo.getPosition());
+    telemetry.addLine("Middle Servo: " + midServo.getPosition());
     telemetry.addLine("Ramp Servo: " + rampServo.getPosition());
     telemetry.update();
 

@@ -2,21 +2,18 @@ package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.lib.hardware.base.Robot;
-import org.firstinspires.ftc.teamcode.lib.hardware.manip.Intake;
 
 @TeleOp (group = "DriveTest")
-public class DriveTest extends Robot{
+public class AdvancedDrive extends Robot{
 
 private boolean yButton2Toggle=false;
 
-        boolean test=true;
-
         boolean isSlow = false;
+        //Changes behavior when intaking
+        boolean isIntaking = false;
 
 private ElapsedTime timer=new ElapsedTime();
 
@@ -26,9 +23,6 @@ private ElapsedTime timer=new ElapsedTime();
         super.init();
 
         isAuto(false);
-
-
-
         }
 
     @Override
@@ -40,25 +34,26 @@ private ElapsedTime timer=new ElapsedTime();
     public void loop(){
         super.loop();
 
-        if(gamepad1.left_trigger>=0.01){
-            isSlow=true;
-        }else{
-            isSlow=false;
-        }
+        //Sets if we are intaking or not
+        isIntaking = gamepad2.right_trigger>.1;
 
-        //Drivetrain control
-        dt.manualControl(gamepad1,isSlow);
+        //Strafe drive, slows down when intaking
+        dt.manualControl(gamepad1, isIntaking);
 
-        //Intake in/out on right trigger/bumper
-        if (gamepad2.right_bumper){
-            intake.setPower(0.5);
-        }
-        else{
+        //Intake controls
+        if(isIntaking){
             intake.setPower(-gamepad2.right_trigger);
+        }else if(gamepad2.right_bumper){
+            intake.setPower(-1);
+        }else{
+            intake.setPower(0);
         }
 
-        //Lift base/intake position on a
-        if(gamepad2.a) {
+        /***********************************\
+        | Run lift positions using encoders |
+        \***********************************/
+        //Lift base/intake position on a or if intaking
+        if(gamepad2.a || isIntaking) {
             lift.setTargetPosition(0);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             lift.setVelocity(600);
@@ -81,32 +76,38 @@ private ElapsedTime timer=new ElapsedTime();
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             lift.setVelocity(600);
         }
+        //Default to lowest position that doesn't hit the barrier for stability
+        else{
+            lift.setTargetPosition(150);
+            lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            lift.setVelocity(600);
+        }
+
+        //Drop down ramp when intaking otherwise hold ramp up
+        if(isIntaking){
+            rampServo.setPosition(.8);
+        }else{
+            rampServo.setPosition(.95);
+        }
+
         if(gamepad2.left_bumper){
-            pushServo.setPosition(.5);
+            midServo.setPosition(.4);
+        }else{
+            midServo.setPosition(1);
+        }
+
+        if(gamepad2.right_trigger >.01){
+            platServo.setPosition(.5);
+        }else{
+            platServo.setPosition(0);
+        }
+
+        if(gamepad2.left_stick_y>.1){
+            pushServo.setPosition(0);
         }else{
             pushServo.setPosition(1);
         }
 
-        if (gamepad2.left_trigger > 0){
-            platServo.setPosition(0.5);
-        }
-        else{
-            platServo.setPosition(0);
-        }
-
-        if (gamepad1.right_trigger > 0){
-            midServo.setPosition(.5);
-        }
-        else{
-            midServo.setPosition(1);
-        }
-
-        if (gamepad1.right_bumper){
-            rampServo.setPosition(.8);
-        }
-        if(gamepad1.left_bumper){
-            rampServo.setPosition(.95);
-        }
 
         telemetry.update();
     }
