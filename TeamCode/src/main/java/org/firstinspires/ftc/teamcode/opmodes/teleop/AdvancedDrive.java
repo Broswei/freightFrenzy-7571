@@ -46,7 +46,7 @@ private ElapsedTime timer=new ElapsedTime();
         if(isIntaking){
             intake.setPower(-gamepad2.right_trigger);
         }else if(gamepad2.right_bumper){
-            intake.setPower(-1);
+            intake.setPower(1);
         }else{
             intake.setPower(0);
         }
