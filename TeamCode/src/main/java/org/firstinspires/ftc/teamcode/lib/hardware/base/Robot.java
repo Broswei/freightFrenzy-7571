@@ -140,6 +140,7 @@ public class Robot extends OpMode{
     telemetry.addLine("Push Servo: " + pushServo.getPosition());
     telemetry.addLine("Middle Servo: " + midServo.getPosition());
     telemetry.addLine("Ramp Servo: " + rampServo.getPosition());
+    telemetry.addLine("Gyro: " + dt.getGyroRotation(AngleUnit.RADIANS));
     telemetry.update();
 
   }
