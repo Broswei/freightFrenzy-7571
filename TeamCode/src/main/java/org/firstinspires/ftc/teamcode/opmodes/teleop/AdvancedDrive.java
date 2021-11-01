@@ -40,8 +40,11 @@ private ElapsedTime timer=new ElapsedTime();
         isSlow = isIntaking || gamepad2.left_trigger >.01 || gamepad1.left_trigger>.01;
 
         //Strafe drive, slows down when intaking
+        if(gamepad1.left_trigger>.1){
+        dt.manualControl(gamepad1,isSlow);
+        }else{
         dt.fieldOrientedControl(gamepad1, isSlow);
-
+        }
         //Intake controls
         if(isIntaking){
             intake.setPower(-gamepad2.right_trigger);
