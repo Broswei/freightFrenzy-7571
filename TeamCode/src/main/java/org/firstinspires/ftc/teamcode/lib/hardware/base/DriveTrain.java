@@ -133,13 +133,13 @@ public class DriveTrain{
 
     public void fieldOrientedControl(Gamepad gamepad, boolean isSlow){
       if(isSlow) {
-        movement_x = Range.clip(-gamepad.left_stick_x, -0.4, 0.4);
-        movement_y = Range.clip(gamepad.left_stick_y, -0.4, 0.4);
+        movement_x = Range.clip(-gamepad.left_stick_x, -0.3, 0.3);
+        movement_y = Range.clip(gamepad.left_stick_y, -0.3, 0.3);
         movement_turn = Range.clip(-gamepad.right_stick_x, -0.3, 0.3);
       } else{
-        movement_x = Range.clip(-gamepad.left_stick_x, -1, 1);
-        movement_y = Range.clip(gamepad.left_stick_y, -1, 1);
-        movement_turn = Range.clip(-gamepad.right_stick_x, -.6, .6);
+        movement_x = Range.clip(-gamepad.left_stick_x, -.5, .5);
+        movement_y = Range.clip(gamepad.left_stick_y, -.5, .5);
+        movement_turn = Range.clip(-gamepad.right_stick_x, -.5, .5);
       }
 
       double temp = movement_x*Math.cos(getGyroRotation(AngleUnit.RADIANS))+movement_y*Math.sin(getGyroRotation(AngleUnit.RADIANS));

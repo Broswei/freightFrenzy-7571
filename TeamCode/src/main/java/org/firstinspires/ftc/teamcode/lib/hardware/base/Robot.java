@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.teamcode.lib.hardware.manip.Intake;
 
@@ -65,10 +66,12 @@ public class Robot extends OpMode{
   public Intake intake = new Intake();
   public DcMotorEx lift;
   public BNO055IMU gyro;
+  public DcMotor spinner;
   public Servo pushServo;
   public Servo platServo;
   public Servo midServo;
   public Servo rampServo;
+  public TouchSensor magLim;
 
   public static ElapsedTime timer = new ElapsedTime();
 
@@ -91,10 +94,12 @@ public class Robot extends OpMode{
     gyro = hardwareMap.get(BNO055IMU.class, "imu");
     intake.init(hardwareMap.get(DcMotor.class, "intake"));
     lift = hardwareMap.get(DcMotorEx.class, "lift");
+    spinner = hardwareMap.get(DcMotor.class, "spinner");
     pushServo = hardwareMap.get(Servo.class, "pushServo");
     platServo = hardwareMap.get(Servo.class,"platServo");
     midServo = hardwareMap.get(Servo.class, "midServo");
     rampServo = hardwareMap.get(Servo.class, "rampServo");
+    magLim = hardwareMap.get(TouchSensor.class, "magLim");
 
   }
 
@@ -140,6 +145,7 @@ public class Robot extends OpMode{
     telemetry.addLine("Push Servo: " + pushServo.getPosition());
     telemetry.addLine("Middle Servo: " + midServo.getPosition());
     telemetry.addLine("Ramp Servo: " + rampServo.getPosition());
+    telemetry.addLine("Limit switch: " + magLim.isPressed());
     telemetry.addLine("Gyro: " + dt.getGyroRotation(AngleUnit.RADIANS));
     telemetry.update();
 

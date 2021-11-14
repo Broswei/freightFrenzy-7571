@@ -14,6 +14,7 @@ private boolean yButton2Toggle=false;
         boolean isSlow = false;
         //Changes behavior when intaking
         boolean isIntaking = false;
+        int liftZero = 0;
 
 private ElapsedTime timer=new ElapsedTime();
 
@@ -37,7 +38,7 @@ private ElapsedTime timer=new ElapsedTime();
         //Sets if we are intaking or not
         isIntaking = gamepad2.right_trigger>.1;
 
-        isSlow = isIntaking || gamepad2.left_trigger >.01 || gamepad1.left_trigger>.01;
+        isSlow = isIntaking || gamepad2.left_trigger >.01 || gamepad1.left_trigger>.01 || gamepad1.right_trigger>.01;
 
         //Strafe drive, slows down when intaking
         if(gamepad1.left_trigger>.1){
@@ -47,12 +48,14 @@ private ElapsedTime timer=new ElapsedTime();
         }
         //Intake controls
         if(isIntaking){
-            intake.setPower(-gamepad2.right_trigger);
+            intake.setPower(-1);
         }else if(gamepad2.right_bumper){
             intake.setPower(1);
         }else{
             intake.setPower(0);
         }
+
+
 
         /***********************************\
          | Run lift positions using encoders |
@@ -62,6 +65,7 @@ private ElapsedTime timer=new ElapsedTime();
                 lift.setTargetPosition(0);
                 lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 lift.setVelocity(100);
+
             }
             //lift level 1 position on b
             else if(gamepad2.b){
@@ -77,21 +81,31 @@ private ElapsedTime timer=new ElapsedTime();
             }
             //lift level 3 position on y
             else if(gamepad2.y) {
-                lift.setTargetPosition(910);
+                lift.setTargetPosition(880);
                 lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 lift.setVelocity(600);
             }
             //Default to lowest position that doesn't hit the barrier for stability
             else{
-                lift.setTargetPosition(150);
+                lift.setTargetPosition(5);
                 lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 lift.setVelocity(200);
+                if(magLim.isPressed()){
+                    liftZero+=lift.getCurrentPosition();
+                    lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                }
             }
         //Drop down ramp when intaking otherwise hold ramp up
-        if(isIntaking || gamepad2.right_bumper){
+        if(isIntaking){
+            if(gamepad2.right_bumper){
+                rampServo.setPosition(.9);
+            }else {
+                rampServo.setPosition(.8);
+            }
+        }else if(gamepad2.right_bumper){
             rampServo.setPosition(.8);
         }else{
-            rampServo.setPosition(.95);
+            rampServo.setPosition(.9);
         }
 
         if(gamepad2.left_bumper){
@@ -111,6 +125,8 @@ private ElapsedTime timer=new ElapsedTime();
         }else{
             pushServo.setPosition(1);
         }
+
+        spinner.setPower(-gamepad1.right_trigger);
 
 
         telemetry.update();
