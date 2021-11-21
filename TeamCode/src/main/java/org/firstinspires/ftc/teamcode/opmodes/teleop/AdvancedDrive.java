@@ -81,7 +81,7 @@ private ElapsedTime timer=new ElapsedTime();
             }
             //lift level 3 position on y
             else if(gamepad2.y) {
-                lift.setTargetPosition(880);
+                lift.setTargetPosition(1000);
                 lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 lift.setVelocity(600);
             }
@@ -111,19 +111,15 @@ private ElapsedTime timer=new ElapsedTime();
         if(gamepad2.left_bumper){
             midServo.setPosition(.4);
         }else{
-            midServo.setPosition(1);
+            midServo.setPosition(.75);
         }
 
         if(gamepad2.left_trigger >.01){
-            platServo.setPosition(.25);
+            leftServo.setPosition(0);
+            rightServo.setPosition(.5);
         }else{
-            platServo.setPosition(0);
-        }
-
-        if(gamepad2.left_stick_y>.1){
-            pushServo.setPosition(0);
-        }else{
-            pushServo.setPosition(1);
+            leftServo.setPosition(.5);
+            rightServo.setPosition(0);
         }
 
         spinner.setPower(-gamepad1.right_trigger);

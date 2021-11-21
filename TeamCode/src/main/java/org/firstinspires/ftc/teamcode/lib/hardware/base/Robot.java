@@ -1,9 +1,5 @@
 package org.firstinspires.ftc.teamcode.lib.hardware.base;
 
-
-//import com.acmerobotics.dashboard.FtcDashboard;
-//import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -40,15 +36,6 @@ import static org.firstinspires.ftc.teamcode.lib.util.GlobalVars.wyRelative;
 import static org.firstinspires.ftc.teamcode.lib.util.GlobalVars.xTarget;
 import static org.firstinspires.ftc.teamcode.lib.util.GlobalVars.yTarget;
 
-/*
-import org.firstinspires.ftc.teamcode.lib.hardware.skystone.Clamp;
-import org.firstinspires.ftc.teamcode.lib.hardware.skystone.Elevator;
- */
-//import org.openftc.revextensions2.ExpansionHubEx;
-//import org.openftc.revextensions2.ExpansionHubMotor;
-//import org.openftc.revextensions2.RevBulkData;
-//import org.openftc.revextensions2.RevExtensions2;
-
 /**
  * main robot class
  * all opmodes will extend this class
@@ -60,17 +47,18 @@ public class Robot extends OpMode{
 
   public DecimalFormat df = new DecimalFormat("###.###");
 
-  private DcMotor[] motors;
+  private DcMotorEx[] motors;
 
   public DriveTrain dt = new DriveTrain();
   public Intake intake = new Intake();
   public DcMotorEx lift;
   public BNO055IMU gyro;
   public DcMotor spinner;
-  public Servo pushServo;
-  public Servo platServo;
+  public Servo leftServo;
+  public Servo rightServo;
   public Servo midServo;
   public Servo rampServo;
+  public Servo goalServo;
   public TouchSensor magLim;
 
   public static ElapsedTime timer = new ElapsedTime();
@@ -81,7 +69,7 @@ public class Robot extends OpMode{
   @Override
   public void init() {
 
-    motors = new DcMotor[]{hardwareMap.dcMotor.get("fl"), hardwareMap.dcMotor.get("fr"), hardwareMap.dcMotor.get("bl"), hardwareMap.dcMotor.get("br")};
+    motors = new DcMotorEx[]{hardwareMap.get(DcMotorEx.class, "fl"), hardwareMap.get(DcMotorEx.class, "fr"), hardwareMap.get(DcMotorEx.class, "bl"), hardwareMap.get(DcMotorEx.class, "br")};
     
     //stores gamepads in global variables
     if(!isAuto){
@@ -95,10 +83,11 @@ public class Robot extends OpMode{
     intake.init(hardwareMap.get(DcMotor.class, "intake"));
     lift = hardwareMap.get(DcMotorEx.class, "lift");
     spinner = hardwareMap.get(DcMotor.class, "spinner");
-    pushServo = hardwareMap.get(Servo.class, "pushServo");
-    platServo = hardwareMap.get(Servo.class,"platServo");
+    leftServo = hardwareMap.get(Servo.class, "pushServo");
+    rightServo = hardwareMap.get(Servo.class,"platServo");
     midServo = hardwareMap.get(Servo.class, "midServo");
     rampServo = hardwareMap.get(Servo.class, "rampServo");
+    goalServo = hardwareMap.get(Servo.class, "goalServo");
     magLim = hardwareMap.get(TouchSensor.class, "magLim");
 
   }
@@ -141,10 +130,11 @@ public class Robot extends OpMode{
 
 
     telemetry.addLine("Lift: " + lift.getCurrentPosition());
-    telemetry.addLine("Platform Servo: " + platServo.getPosition());
-    telemetry.addLine("Push Servo: " + pushServo.getPosition());
+    telemetry.addLine("Left Servo: " + leftServo.getPosition());
+    telemetry.addLine("Right Servo: " + rightServo.getPosition());
     telemetry.addLine("Middle Servo: " + midServo.getPosition());
     telemetry.addLine("Ramp Servo: " + rampServo.getPosition());
+    telemetry.addLine("Goal Servo: " + goalServo.getPosition());
     telemetry.addLine("Limit switch: " + magLim.isPressed());
     telemetry.addLine("Gyro: " + dt.getGyroRotation(AngleUnit.RADIANS));
     telemetry.update();

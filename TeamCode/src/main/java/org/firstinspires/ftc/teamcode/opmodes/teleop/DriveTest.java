@@ -81,18 +81,18 @@ private ElapsedTime timer=new ElapsedTime();
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             lift.setVelocity(600);
         }
-        if(gamepad2.left_bumper){
-            pushServo.setPosition(.5);
-        }else{
-            pushServo.setPosition(1);
-        }
-
-        if (gamepad2.left_trigger > 0){
-            platServo.setPosition(0.5);
-        }
-        else{
-            platServo.setPosition(0);
-        }
+//        if(gamepad2.left_bumper){
+//            pushServo.setPosition(.5);
+//        }else{
+//            pushServo.setPosition(1);
+//        }
+//
+//        if (gamepad2.left_trigger > 0){
+//            platServo.setPosition(0.5);
+//        }
+//        else{
+//            platServo.setPosition(0);
+//        }
 
         if (gamepad1.right_trigger > 0){
             midServo.setPosition(.5);

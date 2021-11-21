@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.lib.hardware.base;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.lib.util.PIDController;
+
 
 import static org.firstinspires.ftc.teamcode.lib.hardware.base.Robot.isAuto;
 import static org.firstinspires.ftc.teamcode.lib.util.GlobalVars.RobotStates;
@@ -40,7 +42,7 @@ import static org.firstinspires.ftc.teamcode.lib.util.GlobalVars.yTarget;
  */
 public class DriveTrain{
 
-  public DcMotor fl, fr, bl, br;
+  public DcMotorEx fl, fr, bl, br;
   public BNO055IMU imu;
 
   private double[] motorPowers = new double[4];
@@ -49,6 +51,8 @@ public class DriveTrain{
   public static double xSpeed = 0;
   public static double ySpeed = 0;
   public static double turnSpeed = 0;
+
+  int ticksPerRotation = 515;
 
   //last update time
   private long lastUpdateTime = 0;
@@ -59,6 +63,8 @@ public class DriveTrain{
   public static PIDController PIDx = new PIDController(xKp, xKi, xKd);
   public static PIDController PIDy = new PIDController(yKp, yKi, yKd);
   public static PIDController PIDa = new PIDController(aKp, aKi, aKd);
+
+  public double ticks;
 
   public DriveTrain(){
 
@@ -74,7 +80,7 @@ public class DriveTrain{
    *               bl = 2
    *               br = 3
    */
-  public void initMotors(DcMotor[] motors) {
+  public void initMotors(DcMotorEx[] motors) {
 
     fl = motors[0];
     fr = motors[1];
@@ -89,10 +95,7 @@ public class DriveTrain{
     fr.setDirection(DcMotorSimple.Direction.REVERSE);
     br.setDirection(DcMotorSimple.Direction.REVERSE);
 
-    fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    //setDrivetrainMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     fl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     fr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -174,6 +177,55 @@ public class DriveTrain{
       bl.setPower(-power);
       br.setPower(power);
 
+  }
+
+  public void driveDistance(double distanceIn,int velocity){
+    ticks = (-distanceIn/(Math.PI*4)*ticksPerRotation);
+    setDrivetrainMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    setDrivetrainPositions((int)ticks);
+    setDrivetrainMode(DcMotor.RunMode.RUN_TO_POSITION);
+    setDrivetrainVelocity(velocity);
+//    fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//    fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//    br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//    bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//    fr.setTargetPosition(-1000);
+//    fl.setTargetPosition(-1000);
+//    br.setTargetPosition(-1000);
+//    bl.setTargetPosition(-1000);
+//    fr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//    fl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//    br.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//    bl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+  }
+
+  public void setDrivetrainMode(DcMotor.RunMode runMode){
+    fr.setMode(runMode);
+    fl.setMode(runMode);
+    br.setMode(runMode);
+    bl.setMode(runMode);
+  }
+
+  public void setDrivetrainPositions(int position){
+    fr.setTargetPosition(position);
+    fl.setTargetPosition(position);
+    br.setTargetPosition(position);
+    bl.setTargetPosition(position);
+  }
+
+  public void setDrivetrainPositions(int frPosition, int flPosition, int brPosition, int blPosition){
+    fr.setTargetPosition(frPosition);
+    fl.setTargetPosition(flPosition);
+    br.setTargetPosition(brPosition);
+    bl.setTargetPosition(blPosition);
+  }
+
+  public void setDrivetrainVelocity(int velocity){
+    fr.setVelocity(velocity);
+    fl.setVelocity(velocity);
+    br.setVelocity(velocity);
+    bl.setVelocity(velocity);
   }
 
   /**

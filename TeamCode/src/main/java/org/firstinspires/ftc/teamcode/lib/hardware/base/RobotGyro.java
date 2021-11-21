@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.lib.hardware.base;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -55,7 +56,7 @@ public class RobotGyro extends OpMode{
     // used in future if you need bulk reads from the other hub
     //private ExpansionHubEx revSlave;
 
-    private DcMotor[] motors;
+    private DcMotorEx[] motors;
 
     public DriveTrain dt = new DriveTrain();
     //public Intake intake = new Intake();
@@ -79,8 +80,7 @@ public class RobotGyro extends OpMode{
         //revMaster = hardwareMap.get(ExpansionHubEx.class,"Expansion Hub 6");
         //revSlave = hardwareMap.get(ExpansionHubEx.class,"Expansion Hub 9");
 
-        motors = new DcMotor[]{hardwareMap.dcMotor.get("fl"), hardwareMap.dcMotor.get("fr"), hardwareMap.dcMotor.get("bl"), hardwareMap.dcMotor.get("br")};
-
+        motors = new DcMotorEx[]{hardwareMap.get(DcMotorEx.class, "fl"), hardwareMap.get(DcMotorEx.class, "fr"), hardwareMap.get(DcMotorEx.class, "bl"), hardwareMap.get(DcMotorEx.class, "br")};
         //stores gamepads in global variables
         if(!isAuto){
             getGamepads(gamepad1, gamepad2);
