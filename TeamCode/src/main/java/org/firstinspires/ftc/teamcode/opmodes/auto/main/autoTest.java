@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 //vision libraries
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
@@ -27,6 +28,8 @@ public class autoTest extends LinearOpMode {
     private ElapsedTime     runtime = new ElapsedTime();
     private HardwareDevice webcam_1;
     private DcMotorEx[] motors;
+    private BNO055IMU gyro;
+    private int degreeOffset = 4;
 
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_DM.tflite";
     private static final String[] LABELS = {
@@ -43,16 +46,65 @@ public class autoTest extends LinearOpMode {
          */
 
         motors = new DcMotorEx[]{hardwareMap.get(DcMotorEx.class, "fl"), hardwareMap.get(DcMotorEx.class, "fr"), hardwareMap.get(DcMotorEx.class, "bl"), hardwareMap.get(DcMotorEx.class, "br")};
+        gyro = hardwareMap.get(BNO055IMU.class, "imu");
 
         dt.initMotors(motors);
+        dt.initGyro(gyro);
         waitForStart();
 
-        dt.driveDistance(12, 1000);
+        dt.driveDistance(36, 1000, opModeIsActive());
+        dt.setDrivetrainMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        turnDegrees(180, 500, true, opModeIsActive());
+        dt.setDrivetrainMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        dt.driveDistance(12, 750, opModeIsActive());
+        turnDegrees(180, 500, true, opModeIsActive());
+        dt.setDrivetrainMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        dt.driveDistance(12, 1000, opModeIsActive());
+        turnDegrees(180, 500, false, opModeIsActive());
+        dt.setDrivetrainMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        dt.driveDistance(34, 750, opModeIsActive());
 
-        while(dt.fr.getCurrentPosition()>-10000 && opModeIsActive()){
-            telemetry.addData("Distance: ", dt.fr.getCurrentPosition());
-            telemetry.addData("Target: ", dt.ticks);
-            telemetry.update();
+    }
+
+    public void turnDegrees(double turnDegrees,int velocity,boolean turnLeft, boolean isRunning){
+        dt.setDrivetrainMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        double offset;
+        offset = dt.getGyroRotation(AngleUnit.DEGREES);
+        int predictedTicks = (int)(turnDegrees*9.34579439252);
+        double correctedDegrees;
+        if(turnLeft){
+            correctedDegrees = offset + turnDegrees;
+            if(correctedDegrees>180){
+                correctedDegrees-=360;
+            }
+            dt.setDrivetrainPositions(-predictedTicks,predictedTicks,-predictedTicks,predictedTicks);
+            dt.setDrivetrainMode(DcMotor.RunMode.RUN_TO_POSITION);
+            dt.setDrivetrainVelocity(velocity);
+            while(correctedDegrees-degreeOffset>dt.getGyroRotation(AngleUnit.DEGREES)&&isRunning){
+                telemetry.addLine("Running left");
+                telemetry.addData("gyro Target: ", correctedDegrees);
+                telemetry.addData("gyro: ", dt.getGyroRotation(AngleUnit.DEGREES));
+                telemetry.addData("Offset: ", offset);
+                telemetry.update();
+            }
+        }else{
+            correctedDegrees = offset - turnDegrees;
+            if(correctedDegrees<-180){
+                correctedDegrees+=360;
+            }
+            dt.setDrivetrainPositions(predictedTicks,-predictedTicks,predictedTicks,-predictedTicks);
+            dt.setDrivetrainMode(DcMotor.RunMode.RUN_TO_POSITION);
+            dt.setDrivetrainVelocity(velocity);
+            while(correctedDegrees+degreeOffset<dt.getGyroRotation(AngleUnit.DEGREES)&&isRunning){
+                telemetry.addLine("Running right");
+                telemetry.addData("gyro: ", dt.getGyroRotation(AngleUnit.DEGREES));
+                telemetry.addData("gyro Target: ", correctedDegrees);
+                telemetry.addData("Offset: ", offset);
+                telemetry.update();
+            }
+
         }
+        dt.setDrivetrainMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
     }
 }

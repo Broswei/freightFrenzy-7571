@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.lib.hardware.base.Robot;
 
 @TeleOp (group = "DriveTest")
-public class AdvancedDrive extends Robot{
+public class AdvancedDriveBlue extends Robot{
 
 private boolean yButton2Toggle=false;
 
@@ -38,7 +38,7 @@ private ElapsedTime timer=new ElapsedTime();
         //Sets if we are intaking or not
         isIntaking = gamepad2.right_trigger>.1;
 
-        isSlow = isIntaking || gamepad2.left_trigger >.01 || gamepad1.left_trigger>.01 || gamepad1.right_trigger>.01;
+        isSlow = gamepad1.left_trigger>.01 || gamepad1.right_trigger>.01;
 
         //Strafe drive, slows down when intaking
         if(gamepad1.left_trigger>.1){
@@ -109,16 +109,16 @@ private ElapsedTime timer=new ElapsedTime();
         }
 
         if(gamepad2.left_bumper){
-            midServo.setPosition(.4);
+            midServo.setPosition(.1);
         }else{
             midServo.setPosition(.75);
         }
 
         if(gamepad2.left_trigger >.01){
             leftServo.setPosition(0);
-            rightServo.setPosition(.5);
+            rightServo.setPosition(.55);
         }else{
-            leftServo.setPosition(.5);
+            leftServo.setPosition(.55);
             rightServo.setPosition(0);
         }
 

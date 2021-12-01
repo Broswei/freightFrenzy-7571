@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -116,6 +117,11 @@ public class DriveTrain{
     imu.initialize(parameters);
 
   }
+  public void initGyro(){
+    BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+    parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+    imu.initialize(parameters);
+  }
 
     /**
      * used to control the drive base with a gamepad during teleop
@@ -179,25 +185,41 @@ public class DriveTrain{
 
   }
 
-  public void driveDistance(double distanceIn,int velocity){
+  public void driveDistance(double distanceIn,int velocity,boolean isRunning){
     ticks = (-distanceIn/(Math.PI*4)*ticksPerRotation);
     setDrivetrainMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     setDrivetrainPositions((int)ticks);
     setDrivetrainMode(DcMotor.RunMode.RUN_TO_POSITION);
     setDrivetrainVelocity(velocity);
-//    fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//    fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//    br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//    bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//    fr.setTargetPosition(-1000);
-//    fl.setTargetPosition(-1000);
-//    br.setTargetPosition(-1000);
-//    bl.setTargetPosition(-1000);
-//    fr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//    fl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//    br.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//    bl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+    ElapsedTime runtime = new ElapsedTime();
+    boolean run = true;
+    runtime.reset();
+    while(fr.isBusy() && isRunning){
+
+    }
+  }
+
+  public void turnDegrees(double turnDegrees,int velocity,boolean turnRight, double currentRotation, boolean isRunning){
+    setDrivetrainMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    double offset = currentRotation;
+    if(turnRight){
+      double correctedDegrees = offset+turnDegrees;
+
+      while((currentRotation<=correctedDegrees+5 && currentRotation>=correctedDegrees-5)&&isRunning){
+        setDrivetrainMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setDrivetrainPositions(1000,-1000,1000,-1000);
+        setDrivetrainMode(DcMotor.RunMode.RUN_TO_POSITION);
+        setDrivetrainVelocity(velocity);
+      }
+    }else{
+      double correctedDegrees = offset-turnDegrees;
+
+      while((0<=100+5 && 0>=-100-5)&&isRunning){
+        setPowers(.3,-.3);
+      }
+    }
+    setDrivetrainMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
   }
 
   public void setDrivetrainMode(DcMotor.RunMode runMode){
