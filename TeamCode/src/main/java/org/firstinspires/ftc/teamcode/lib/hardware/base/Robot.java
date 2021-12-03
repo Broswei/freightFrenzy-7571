@@ -58,7 +58,6 @@ public class Robot extends OpMode{
   public Servo rightServo;
   public Servo midServo;
   public Servo rampServo;
-  public Servo goalServo;
   public TouchSensor magLim;
 
   public static ElapsedTime timer = new ElapsedTime();
@@ -87,7 +86,6 @@ public class Robot extends OpMode{
     rightServo = hardwareMap.get(Servo.class,"platServo");
     midServo = hardwareMap.get(Servo.class, "midServo");
     rampServo = hardwareMap.get(Servo.class, "rampServo");
-    goalServo = hardwareMap.get(Servo.class, "goalServo");
     magLim = hardwareMap.get(TouchSensor.class, "magLim");
 
   }
@@ -134,7 +132,6 @@ public class Robot extends OpMode{
     telemetry.addLine("Right Servo: " + rightServo.getPosition());
     telemetry.addLine("Middle Servo: " + midServo.getPosition());
     telemetry.addLine("Ramp Servo: " + rampServo.getPosition());
-    telemetry.addLine("Goal Servo: " + goalServo.getPosition());
     telemetry.addLine("Limit switch: " + magLim.isPressed());
     telemetry.addLine("Gyro: " + dt.getGyroRotation(AngleUnit.RADIANS));
     telemetry.update();

@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -185,7 +186,7 @@ public class DriveTrain{
 
   }
 
-  public void driveDistance(double distanceIn,int velocity,boolean isRunning){
+  public void driveDistance(double distanceIn, int velocity, boolean isRunning){
     ticks = (-distanceIn/(Math.PI*4)*ticksPerRotation);
     setDrivetrainMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     setDrivetrainPositions((int)ticks);
@@ -200,26 +201,19 @@ public class DriveTrain{
     }
   }
 
-  public void turnDegrees(double turnDegrees,int velocity,boolean turnRight, double currentRotation, boolean isRunning){
+  public void strafeDistance(double distanceIn,int velocity,boolean isRunning){
+    ticks = (-distanceIn/(Math.PI*4)*ticksPerRotation*1.1);
     setDrivetrainMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    double offset = currentRotation;
-    if(turnRight){
-      double correctedDegrees = offset+turnDegrees;
+    setDrivetrainPositions((int)ticks, (int)-ticks,(int)-ticks, (int)ticks);
+    setDrivetrainMode(DcMotor.RunMode.RUN_TO_POSITION);
+    setDrivetrainVelocity(velocity);
 
-      while((currentRotation<=correctedDegrees+5 && currentRotation>=correctedDegrees-5)&&isRunning){
-        setDrivetrainMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        setDrivetrainPositions(1000,-1000,1000,-1000);
-        setDrivetrainMode(DcMotor.RunMode.RUN_TO_POSITION);
-        setDrivetrainVelocity(velocity);
-      }
-    }else{
-      double correctedDegrees = offset-turnDegrees;
+    ElapsedTime runtime = new ElapsedTime();
+    boolean run = true;
+    runtime.reset();
+    while(fr.isBusy() && isRunning){
 
-      while((0<=100+5 && 0>=-100-5)&&isRunning){
-        setPowers(.3,-.3);
-      }
     }
-    setDrivetrainMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
   }
 
   public void setDrivetrainMode(DcMotor.RunMode runMode){
