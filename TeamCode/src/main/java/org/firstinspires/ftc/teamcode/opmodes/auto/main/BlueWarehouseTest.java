@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto.main;
 
-import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -11,23 +11,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-//vision libraries
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-
 import org.firstinspires.ftc.teamcode.lib.hardware.base.DriveTrain;
-import org.firstinspires.ftc.teamcode.lib.hardware.base.Robot;
 import org.firstinspires.ftc.teamcode.lib.hardware.manip.Intake;
 
 
 @Autonomous(group="Main")
-public class autoTest extends LinearOpMode {
+public class BlueWarehouseTest extends LinearOpMode {
 
     /* Declare OpMode members. */
     private DriveTrain dt = new DriveTrain();
@@ -44,8 +34,7 @@ public class autoTest extends LinearOpMode {
     public Servo midServo;
     public Servo rampServo;
     public TouchSensor magLim;
-    public RevColorSensorV3 color;
-
+    public ColorSensor color;
 
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_DM.tflite";
     private static final String[] LABELS = {
@@ -71,40 +60,18 @@ public class autoTest extends LinearOpMode {
         midServo = hardwareMap.get(Servo.class, "midServo");
         rampServo = hardwareMap.get(Servo.class, "rampServo");
         magLim = hardwareMap.get(TouchSensor.class, "magLim");
-        color = hardwareMap.get(RevColorSensorV3.class,"color");
-
+        color = hardwareMap.get(ColorSensor.class,"color");
 
         dt.initMotors(motors);
         dt.initGyro(gyro);
         waitForStart();
 
         //Auto Commands
-        while(opModeIsActive()){
-            telemetry.addData("Red: ", color.red());
-            telemetry.addData("Green: ", color.green());
-            telemetry.addData("Blue: ", color.blue());
-            telemetry.addData("Sees color: ", seesMarker());
-            telemetry.addData("Distance: ", color.getDistance(DistanceUnit.INCH));
-            telemetry.update();
+        dt.driveDistance(18, 500, opModeIsActive());
+        turnDegrees(90, 500);
+        dt.driveDistance(60,1000,opModeIsActive());
 
-        }
-    }
 
-    //See color
-    public boolean seesMarker(){
-        int goalRed = 0;
-        int goalGreen = 0;
-        int goalBlue = 0;
-
-        int error = 25;
-
-        color.enableLed(true);
-        int diffRed = Math.abs(color.red()-goalRed);
-        int diffGreen = Math.abs(color.green()-goalGreen);
-        int diffBlue = Math.abs(color.blue()-goalBlue);
-        color.enableLed(false);
-
-        return diffRed<=error&&diffGreen<=error&&diffBlue<=error;
     }
 
     //Turn by degrees

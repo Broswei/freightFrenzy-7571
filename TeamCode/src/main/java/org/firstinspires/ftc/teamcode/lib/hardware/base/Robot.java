@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.lib.hardware.base;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -59,6 +60,7 @@ public class Robot extends OpMode{
   public Servo midServo;
   public Servo rampServo;
   public TouchSensor magLim;
+  public ColorSensor color;
 
   public static ElapsedTime timer = new ElapsedTime();
 
@@ -87,6 +89,7 @@ public class Robot extends OpMode{
     midServo = hardwareMap.get(Servo.class, "midServo");
     rampServo = hardwareMap.get(Servo.class, "rampServo");
     magLim = hardwareMap.get(TouchSensor.class, "magLim");
+    color = hardwareMap.get(ColorSensor.class,"color");
 
   }
 
