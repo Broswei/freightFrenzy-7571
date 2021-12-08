@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto.main;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -12,6 +13,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.lib.hardware.base.DriveTrain;
 import org.firstinspires.ftc.teamcode.lib.hardware.manip.Intake;
 
@@ -34,7 +36,8 @@ public class BlueWarehouseTest extends LinearOpMode {
     public Servo midServo;
     public Servo rampServo;
     public TouchSensor magLim;
-    public ColorSensor color;
+    public RevColorSensorV3 color;
+    private int level = 1;
 
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_DM.tflite";
     private static final String[] LABELS = {
@@ -60,18 +63,68 @@ public class BlueWarehouseTest extends LinearOpMode {
         midServo = hardwareMap.get(Servo.class, "midServo");
         rampServo = hardwareMap.get(Servo.class, "rampServo");
         magLim = hardwareMap.get(TouchSensor.class, "magLim");
-        color = hardwareMap.get(ColorSensor.class,"color");
+        color = hardwareMap.get(RevColorSensorV3.class,"color");
 
         dt.initMotors(motors);
         dt.initGyro(gyro);
         waitForStart();
 
         //Auto Commands
-        dt.driveDistance(18, 500, opModeIsActive());
-        turnDegrees(90, 500);
+        dt.driveDistance(-15.5, 500, opModeIsActive());
+        if(seesMarker()){
+            level = 1;
+        }
+        dt.strafeDistance(8, 500, opModeIsActive());
+        if(seesMarker()){
+            level = 2;
+        }
+        dt.strafeDistance(8, 500, opModeIsActive());
+        if(seesMarker()){
+            level = 3;
+        }
+        telemetry.addData("Level: ", level);
+        telemetry.update();
+
+        dt.strafeDistance(-10,750,opModeIsActive());
+        turnDegrees(-90,750);
+        dt.strafeDistance(-17,750,opModeIsActive());
+        dt.driveDistance(-2.5,500,opModeIsActive());
+        liftToLevel(level);
+        deposit();
+        dt.driveDistance(2.5,500,opModeIsActive());
+        liftToLevel(0);
+        dt.strafeDistance(-20,750,opModeIsActive());
         dt.driveDistance(60,1000,opModeIsActive());
+        turnDegrees(-90,750);
 
+        while(opModeIsActive()){
+        }
+    }
+    public void strafeUntilMarker(double distanceIn, int velocity, boolean isRunning){
+        int ticks = (int)(-distanceIn/(Math.PI*4)*515*1.1);
+        dt.setDrivetrainMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        dt.setDrivetrainPositions((int)ticks, (int)-ticks,(int)-ticks, (int)ticks);
+        dt.setDrivetrainMode(DcMotor.RunMode.RUN_TO_POSITION);
+        dt.setDrivetrainVelocity(velocity);
 
+        ElapsedTime runtime = new ElapsedTime();
+        boolean run = true;
+        runtime.reset();
+        while(!seesMarker()&&dt.fr.isBusy() && isRunning){
+            telemetry.addData("Sees Marker: ", seesMarker());
+            telemetry.addData("Distance: ", color.getDistance(DistanceUnit.INCH));
+            telemetry.update();
+        }
+        if(seesMarker()){
+            dt.setDrivetrainMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+    }
+
+    //Returns true when it sees the marker
+    public boolean seesMarker(){
+        int benchmarkDist = 2;
+
+        return color.getDistance(DistanceUnit.INCH)<benchmarkDist;
     }
 
     //Turn by degrees

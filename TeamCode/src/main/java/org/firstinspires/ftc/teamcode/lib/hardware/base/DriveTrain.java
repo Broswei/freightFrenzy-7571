@@ -201,7 +201,7 @@ public class DriveTrain{
     }
   }
 
-  public void strafeDistance(double distanceIn,int velocity,boolean isRunning){
+  public void strafeDistance(double distanceIn, int velocity, boolean isRunning){
     ticks = (-distanceIn/(Math.PI*4)*ticksPerRotation*1.1);
     setDrivetrainMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     setDrivetrainPositions((int)ticks, (int)-ticks,(int)-ticks, (int)ticks);
@@ -215,6 +215,8 @@ public class DriveTrain{
 
     }
   }
+
+
 
   public void setDrivetrainMode(DcMotor.RunMode runMode){
     fr.setMode(runMode);

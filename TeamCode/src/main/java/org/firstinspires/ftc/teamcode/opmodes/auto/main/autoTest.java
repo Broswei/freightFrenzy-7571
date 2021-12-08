@@ -45,6 +45,7 @@ public class autoTest extends LinearOpMode {
     public Servo rampServo;
     public TouchSensor magLim;
     public RevColorSensorV3 color;
+    private int level = 1;
 
 
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_DM.tflite";
@@ -79,32 +80,53 @@ public class autoTest extends LinearOpMode {
         waitForStart();
 
         //Auto Commands
+        dt.driveDistance(-15.5, 500, opModeIsActive());
+        if(seesMarker()){
+            level = 1;
+        }
+        dt.strafeDistance(8, 500, opModeIsActive());
+        if(seesMarker()){
+            level = 2;
+        }
+        dt.strafeDistance(8, 500, opModeIsActive());
+        if(seesMarker()){
+            level = 3;
+        }
+        telemetry.addData("Level: ", level);
+        telemetry.update();
+
+
         while(opModeIsActive()){
-            telemetry.addData("Red: ", color.red());
-            telemetry.addData("Green: ", color.green());
-            telemetry.addData("Blue: ", color.blue());
-            telemetry.addData("Sees color: ", seesMarker());
+        }
+
+
+    }
+
+    public void strafeUntilMarker(double distanceIn, int velocity, boolean isRunning){
+        int ticks = (int)(-distanceIn/(Math.PI*4)*515*1.1);
+        dt.setDrivetrainMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        dt.setDrivetrainPositions((int)ticks, (int)-ticks,(int)-ticks, (int)ticks);
+        dt.setDrivetrainMode(DcMotor.RunMode.RUN_TO_POSITION);
+        dt.setDrivetrainVelocity(velocity);
+
+        ElapsedTime runtime = new ElapsedTime();
+        boolean run = true;
+        runtime.reset();
+        while(!seesMarker()&&dt.fr.isBusy() && isRunning){
+            telemetry.addData("Sees Marker: ", seesMarker());
             telemetry.addData("Distance: ", color.getDistance(DistanceUnit.INCH));
             telemetry.update();
-
+        }
+        if(seesMarker()){
+            dt.setDrivetrainMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
     }
 
-    //See color
+    //Returns true when it sees the marker
     public boolean seesMarker(){
-        int goalRed = 0;
-        int goalGreen = 0;
-        int goalBlue = 0;
+        int benchmarkDist = 2;
 
-        int error = 25;
-
-        color.enableLed(true);
-        int diffRed = Math.abs(color.red()-goalRed);
-        int diffGreen = Math.abs(color.green()-goalGreen);
-        int diffBlue = Math.abs(color.blue()-goalBlue);
-        color.enableLed(false);
-
-        return diffRed<=error&&diffGreen<=error&&diffBlue<=error;
+        return color.getDistance(DistanceUnit.INCH)<benchmarkDist;
     }
 
     //Turn by degrees
