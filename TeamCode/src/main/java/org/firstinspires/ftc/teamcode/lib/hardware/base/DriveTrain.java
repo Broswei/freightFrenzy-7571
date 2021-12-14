@@ -141,7 +141,7 @@ public class DriveTrain{
         }
     }
 
-    public void fieldOrientedControl(Gamepad gamepad, boolean isSlow){
+    public void fieldOrientedControl(Gamepad gamepad, boolean isSlow, double gyroOffset){
       if(isSlow) {
         movement_x = Range.clip(-gamepad.left_stick_x, -0.3, 0.3);
         movement_y = Range.clip(gamepad.left_stick_y, -0.3, 0.3);
@@ -152,8 +152,8 @@ public class DriveTrain{
         movement_turn = Range.clip(-gamepad.right_stick_x, -.5, .5);
       }
 
-      double temp = movement_x*Math.cos(getGyroRotation(AngleUnit.RADIANS))+movement_y*Math.sin(getGyroRotation(AngleUnit.RADIANS));
-      movement_y = -movement_x*Math.sin(getGyroRotation(AngleUnit.RADIANS))+movement_y*Math.cos(getGyroRotation(AngleUnit.RADIANS));
+      double temp = movement_x*Math.cos(getGyroRotation(AngleUnit.RADIANS)-gyroOffset)+movement_y*Math.sin(getGyroRotation(AngleUnit.RADIANS)-gyroOffset);
+      movement_y = -movement_x*Math.sin(getGyroRotation(AngleUnit.RADIANS)-gyroOffset)+movement_y*Math.cos(getGyroRotation(AngleUnit.RADIANS)-gyroOffset);
       movement_x = temp;
     }
 

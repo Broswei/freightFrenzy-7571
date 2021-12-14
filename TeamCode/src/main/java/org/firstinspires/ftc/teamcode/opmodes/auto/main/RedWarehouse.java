@@ -4,7 +4,6 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
@@ -19,7 +18,7 @@ import org.firstinspires.ftc.teamcode.lib.hardware.manip.Intake;
 
 
 @Autonomous(group="Main")
-public class BlueWarehouseTest extends LinearOpMode {
+public class RedWarehouse extends LinearOpMode {
 
     /* Declare OpMode members. */
     private DriveTrain dt = new DriveTrain();
@@ -36,8 +35,8 @@ public class BlueWarehouseTest extends LinearOpMode {
     public Servo midServo;
     public Servo rampServo;
     public TouchSensor magLim;
-    public RevColorSensorV3 color;
-    private int level = 1;
+    public RevColorSensorV3 color2;
+    private int level = 2;
 
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_DM.tflite";
     private static final String[] LABELS = {
@@ -63,7 +62,7 @@ public class BlueWarehouseTest extends LinearOpMode {
         midServo = hardwareMap.get(Servo.class, "midServo");
         rampServo = hardwareMap.get(Servo.class, "rampServo");
         magLim = hardwareMap.get(TouchSensor.class, "magLim");
-        color = hardwareMap.get(RevColorSensorV3.class,"color");
+        color2 = hardwareMap.get(RevColorSensorV3.class,"color2");
 
         dt.initMotors(motors);
         dt.initGyro(gyro);
@@ -72,30 +71,39 @@ public class BlueWarehouseTest extends LinearOpMode {
         //Auto Commands
         dt.driveDistance(-15.5, 500, opModeIsActive());
         if(seesMarker()){
-            level = 1;
+            telemetry.addData("Distance: ", color2.getDistance(DistanceUnit.INCH));
+            telemetry.update();
+            level = 3;
         }
-        dt.strafeDistance(8, 500, opModeIsActive());
+        dt.strafeDistance(-8.5, 500, opModeIsActive());
         if(seesMarker()){
+            telemetry.addData("Distance: ", color2.getDistance(DistanceUnit.INCH));
+            telemetry.update();
             level = 2;
         }
-        dt.strafeDistance(8, 500, opModeIsActive());
+        dt.strafeDistance(-8.5, 500, opModeIsActive());
         if(seesMarker()){
-            level = 3;
+            telemetry.addData("Distance: ", color2.getDistance(DistanceUnit.INCH));
+            telemetry.update();
+            level = 1;
         }
         telemetry.addData("Level: ", level);
         telemetry.update();
 
-        dt.strafeDistance(-10,750,opModeIsActive());
-        turnDegrees(-90,750);
-        dt.strafeDistance(-17,750,opModeIsActive());
-        dt.driveDistance(-2.5,500,opModeIsActive());
+        dt.strafeDistance(9,750,opModeIsActive());
+        dt.driveDistance(4,500,opModeIsActive());
+        turnDegrees(88,250);
+        dt.strafeDistance(25,750,opModeIsActive());
         liftToLevel(level);
         deposit();
-        dt.driveDistance(2.5,500,opModeIsActive());
+        if(level==2){
+            dt.driveDistance(2,500,opModeIsActive());
+        }else if(level==3){
+            dt.driveDistance(4.5,500,opModeIsActive());
+        }
         liftToLevel(0);
-        dt.strafeDistance(-20,750,opModeIsActive());
+        dt.strafeDistance(-22,750,opModeIsActive());
         dt.driveDistance(60,1000,opModeIsActive());
-        turnDegrees(-90,750);
 
         while(opModeIsActive()){
         }
@@ -112,7 +120,7 @@ public class BlueWarehouseTest extends LinearOpMode {
         runtime.reset();
         while(!seesMarker()&&dt.fr.isBusy() && isRunning){
             telemetry.addData("Sees Marker: ", seesMarker());
-            telemetry.addData("Distance: ", color.getDistance(DistanceUnit.INCH));
+            telemetry.addData("Distance: ", color2.getDistance(DistanceUnit.INCH));
             telemetry.update();
         }
         if(seesMarker()){
@@ -124,7 +132,7 @@ public class BlueWarehouseTest extends LinearOpMode {
     public boolean seesMarker(){
         int benchmarkDist = 2;
 
-        return color.getDistance(DistanceUnit.INCH)<benchmarkDist;
+        return color2.getDistance(DistanceUnit.INCH)<benchmarkDist;
     }
 
     //Turn by degrees
@@ -171,27 +179,29 @@ public class BlueWarehouseTest extends LinearOpMode {
     //Lift commands
     public void liftToLevel(int level){
         if(level == 1){
-            lift.setTargetPosition(200);
+            lift.setTargetPosition(350);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             lift.setVelocity(600);
+            dt.driveDistance(2,200,opModeIsActive());
         }
         //lift level 2 position on x
         else if(level == 2){
-            lift.setTargetPosition(550);
+            lift.setTargetPosition(800);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             lift.setVelocity(600);
         }
         //lift level 3 position on y
         else if(level ==3) {
-            lift.setTargetPosition(1000);
+            lift.setTargetPosition(1100);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             lift.setVelocity(600);
+            dt.driveDistance(-2.5,200,opModeIsActive());
         }
         //Default to lowest position
         else if(level == 0) {
-            lift.setTargetPosition(5);
+            lift.setTargetPosition(0);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            lift.setVelocity(200);
+            lift.setVelocity(400);
         }
 
         while(lift.isBusy()&&opModeIsActive()){
@@ -205,7 +215,7 @@ public class BlueWarehouseTest extends LinearOpMode {
         leftServo.setPosition(0);
         rightServo.setPosition(.55);
         runtime.reset();
-        while(runtime.milliseconds()<1000&&opModeIsActive()){
+        while(runtime.milliseconds()<2000&&opModeIsActive()){
             telemetry.addLine("Depositing");
             telemetry.update();
         }

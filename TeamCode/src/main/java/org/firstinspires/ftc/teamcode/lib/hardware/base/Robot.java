@@ -55,6 +55,7 @@ public class Robot extends OpMode{
   public DcMotorEx lift;
   public BNO055IMU gyro;
   public DcMotor spinner;
+  public DcMotor spinner2;
   public Servo leftServo;
   public Servo rightServo;
   public Servo midServo;
@@ -84,6 +85,7 @@ public class Robot extends OpMode{
     intake.init(hardwareMap.get(DcMotor.class, "intake"));
     lift = hardwareMap.get(DcMotorEx.class, "lift");
     spinner = hardwareMap.get(DcMotor.class, "spinner");
+    spinner2 = hardwareMap.get(DcMotor.class, "spinner2");
     leftServo = hardwareMap.get(Servo.class, "pushServo");
     rightServo = hardwareMap.get(Servo.class,"platServo");
     midServo = hardwareMap.get(Servo.class, "midServo");

@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.lib.hardware.base.Robot;
 
 @TeleOp (group = "DriveTest")
@@ -15,6 +16,7 @@ private boolean yButton2Toggle=false;
         //Changes behavior when intaking
         boolean isIntaking = false;
         int liftZero = 0;
+        double gyroOffset = 0;
 
 private ElapsedTime timer=new ElapsedTime();
 
@@ -40,11 +42,15 @@ private ElapsedTime timer=new ElapsedTime();
 
         isSlow = gamepad1.left_trigger>.01 || gamepad1.right_trigger>.01;
 
+        if(gamepad1.y){
+            gyroOffset = dt.getGyroRotation(AngleUnit.RADIANS);
+        }
+
         //Strafe drive, slows down when intaking
         if(gamepad1.left_trigger>.1){
         dt.manualControl(gamepad1,isSlow);
         }else{
-        dt.fieldOrientedControl(gamepad1, isSlow);
+        dt.fieldOrientedControl(gamepad1, isSlow, gyroOffset);
         }
         //Intake controls
         if(isIntaking){
@@ -87,13 +93,9 @@ private ElapsedTime timer=new ElapsedTime();
             }
             //Default to lowest position that doesn't hit the barrier for stability
             else{
-                lift.setTargetPosition(5);
+                lift.setTargetPosition(0);
                 lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 lift.setVelocity(200);
-                if(magLim.isPressed()){
-                    liftZero+=lift.getCurrentPosition();
-                    lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                }
             }
         //Drop down ramp when intaking otherwise hold ramp up
         if(isIntaking){
@@ -122,7 +124,7 @@ private ElapsedTime timer=new ElapsedTime();
             rightServo.setPosition(0);
         }
 
-        spinner.setPower(-gamepad1.right_trigger);
+        spinner.setPower(gamepad1.right_trigger);
 
 
         telemetry.update();

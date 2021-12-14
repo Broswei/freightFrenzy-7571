@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto.main;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -11,23 +12,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-//vision libraries
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-
 import org.firstinspires.ftc.teamcode.lib.hardware.base.DriveTrain;
-import org.firstinspires.ftc.teamcode.lib.hardware.base.Robot;
 import org.firstinspires.ftc.teamcode.lib.hardware.manip.Intake;
 
 
 @Autonomous(group="Main")
-public class autoTest extends LinearOpMode {
+public class BlueStorage extends LinearOpMode {
 
     /* Declare OpMode members. */
     private DriveTrain dt = new DriveTrain();
@@ -46,8 +38,6 @@ public class autoTest extends LinearOpMode {
     public TouchSensor magLim;
     public RevColorSensorV3 color;
     private int level = 1;
-    public RevColorSensorV3 color2;
-
 
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_DM.tflite";
     private static final String[] LABELS = {
@@ -74,26 +64,73 @@ public class autoTest extends LinearOpMode {
         rampServo = hardwareMap.get(Servo.class, "rampServo");
         magLim = hardwareMap.get(TouchSensor.class, "magLim");
         color = hardwareMap.get(RevColorSensorV3.class,"color");
-        color2 = hardwareMap.get(RevColorSensorV3.class,"color2");
-
 
         dt.initMotors(motors);
         dt.initGyro(gyro);
         waitForStart();
 
         //Auto Commands
-        while(opModeIsActive()){
-            telemetry.addData("Color1: ", seesMarker());
-            telemetry.addData("Color2: ", seesMarker2());
-            telemetry.addData("Color1: ", color.getDistance(DistanceUnit.INCH));
-            telemetry.addData("Color2: ", color2.getDistance(DistanceUnit.INCH));
+        dt.driveDistance(-4,500,opModeIsActive());
+        dt.strafeDistance(3.5, 500, opModeIsActive());
+        spinner.setPower(1);
+        sleep(2000);
+        spinner.setPower(0);
+        dt.strafeDistance(-19,500,opModeIsActive());
+        dt.driveDistance(6,500,opModeIsActive());
+        dt.driveDistance(-15.5,500,opModeIsActive());
+        if(seesMarker()){
+            telemetry.addData("Distance: ", color.getDistance(DistanceUnit.INCH));
             telemetry.update();
+            level = 1;
+        }
+        dt.strafeDistance(8.5, 500, opModeIsActive());
+        if(seesMarker()){
+            telemetry.addData("Distance: ", color.getDistance(DistanceUnit.INCH));
+            telemetry.update();
+            level = 2;
+        }
+        dt.strafeDistance(8.5, 500, opModeIsActive());
+        if(seesMarker()){
+            telemetry.addData("Distance: ", color.getDistance(DistanceUnit.INCH));
+            telemetry.update();
+            level = 3;
+        }
+        telemetry.addData("Level: ", level);
+        telemetry.update();
 
+        dt.strafeDistance(-20,750,opModeIsActive());
+        dt.driveDistance(4,500,opModeIsActive());
+        turnDegrees(88,250);
+        dt.strafeDistance(25,750,opModeIsActive());
+        liftToLevel(level);
+
+        deposit();
+        if(level==2){
+            dt.driveDistance(2,500,opModeIsActive());
+        }else if(level==3){
+            dt.driveDistance(4.5,500,opModeIsActive());
         }
 
+        //Drop lift and back up at the same time
+        lift.setTargetPosition(0);
+        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lift.setVelocity(400);
+        double ticks = (-29/(Math.PI*4)*515);
+        dt.setDrivetrainMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        dt.setDrivetrainPositions((int)ticks);
+        dt.setDrivetrainMode(DcMotor.RunMode.RUN_TO_POSITION);
+        dt.setDrivetrainVelocity(1000);
 
+        ElapsedTime runtime = new ElapsedTime();
+        boolean run = true;
+        runtime.reset();
+        while(dt.fr.isBusy() && opModeIsActive()){}
+//        liftToLevel(0);
+//        dt.driveDistance(29,1000,opModeIsActive());
+        dt.strafeDistance(-10,1000,opModeIsActive());
+        while(opModeIsActive()){
+        }
     }
-
     public void strafeUntilMarker(double distanceIn, int velocity, boolean isRunning){
         int ticks = (int)(-distanceIn/(Math.PI*4)*515*1.1);
         dt.setDrivetrainMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -119,12 +156,6 @@ public class autoTest extends LinearOpMode {
         int benchmarkDist = 2;
 
         return color.getDistance(DistanceUnit.INCH)<benchmarkDist;
-    }
-
-    public boolean seesMarker2(){
-        int benchmarkDist = 2;
-
-        return color2.getDistance(DistanceUnit.INCH)<benchmarkDist;
     }
 
     //Turn by degrees
@@ -171,30 +202,29 @@ public class autoTest extends LinearOpMode {
     //Lift commands
     public void liftToLevel(int level){
         if(level == 1){
-            lift.setTargetPosition(300);
+            lift.setTargetPosition(350);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             lift.setVelocity(600);
-            dt.driveDistance(1.5,200,opModeIsActive());
+            dt.driveDistance(1,200,opModeIsActive());
         }
         //lift level 2 position on x
         else if(level == 2){
-            lift.setTargetPosition(600);
+            lift.setTargetPosition(800);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             lift.setVelocity(600);
-            dt.driveDistance(-1.5,200,opModeIsActive());
         }
         //lift level 3 position on y
         else if(level ==3) {
-            lift.setTargetPosition(1000);
+            lift.setTargetPosition(1100);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             lift.setVelocity(600);
-            dt.driveDistance(-2,200,opModeIsActive());
+            dt.driveDistance(-2.5,200,opModeIsActive());
         }
         //Default to lowest position
         else if(level == 0) {
-            lift.setTargetPosition(5);
+            lift.setTargetPosition(0);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            lift.setVelocity(200);
+            lift.setVelocity(400);
         }
 
         while(lift.isBusy()&&opModeIsActive()){
@@ -208,7 +238,7 @@ public class autoTest extends LinearOpMode {
         leftServo.setPosition(0);
         rightServo.setPosition(.55);
         runtime.reset();
-        while(runtime.milliseconds()<2000&&opModeIsActive()){
+        while(runtime.milliseconds()<1500&&opModeIsActive()){
             telemetry.addLine("Depositing");
             telemetry.update();
         }
