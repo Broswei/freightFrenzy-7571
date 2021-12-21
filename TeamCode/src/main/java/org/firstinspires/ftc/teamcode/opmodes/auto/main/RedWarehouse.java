@@ -36,7 +36,7 @@ public class RedWarehouse extends LinearOpMode {
     public Servo rampServo;
     public TouchSensor magLim;
     public RevColorSensorV3 color2;
-    private int level = 2;
+    private int level = 3;
 
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_DM.tflite";
     private static final String[] LABELS = {
@@ -69,13 +69,13 @@ public class RedWarehouse extends LinearOpMode {
         waitForStart();
 
         //Auto Commands
-        dt.driveDistance(-15.5, 500, opModeIsActive());
+        dt.driveDistance(-14.5, 500, opModeIsActive());
         if(seesMarker()){
             telemetry.addData("Distance: ", color2.getDistance(DistanceUnit.INCH));
             telemetry.update();
             level = 3;
         }
-        dt.strafeDistance(-8.5, 500, opModeIsActive());
+        dt.strafeDistance(-8, 500, opModeIsActive());
         if(seesMarker()){
             telemetry.addData("Distance: ", color2.getDistance(DistanceUnit.INCH));
             telemetry.update();
@@ -90,7 +90,7 @@ public class RedWarehouse extends LinearOpMode {
         telemetry.addData("Level: ", level);
         telemetry.update();
 
-        dt.strafeDistance(9,750,opModeIsActive());
+        dt.strafeDistance(12.5,750,opModeIsActive());
         dt.driveDistance(4,500,opModeIsActive());
         turnDegrees(88,250);
         dt.strafeDistance(25,750,opModeIsActive());
@@ -99,10 +99,10 @@ public class RedWarehouse extends LinearOpMode {
         if(level==2){
             dt.driveDistance(2,500,opModeIsActive());
         }else if(level==3){
-            dt.driveDistance(4.5,500,opModeIsActive());
+            dt.driveDistance(4,500,opModeIsActive());
         }
         liftToLevel(0);
-        dt.strafeDistance(-22,750,opModeIsActive());
+        dt.strafeDistance(-20,750,opModeIsActive());
         dt.driveDistance(60,1000,opModeIsActive());
 
         while(opModeIsActive()){
@@ -179,7 +179,7 @@ public class RedWarehouse extends LinearOpMode {
     //Lift commands
     public void liftToLevel(int level){
         if(level == 1){
-            lift.setTargetPosition(350);
+            lift.setTargetPosition(450);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             lift.setVelocity(600);
             dt.driveDistance(2,200,opModeIsActive());

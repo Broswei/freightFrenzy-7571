@@ -29,13 +29,13 @@ public class RedStorage extends LinearOpMode {
     private int degreeOffset = 2;
     public Intake intake = new Intake();
     public DcMotorEx lift;
-    public DcMotor spinner;
+    public DcMotor spinner2;
     public Servo leftServo;
     public Servo rightServo;
     public Servo midServo;
     public Servo rampServo;
     public TouchSensor magLim;
-    private int level = 1;
+    private int level = 3;
     public RevColorSensorV3 color2;
 
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_DM.tflite";
@@ -56,7 +56,7 @@ public class RedStorage extends LinearOpMode {
         gyro = hardwareMap.get(BNO055IMU.class, "imu");
         intake.init(hardwareMap.get(DcMotor.class, "intake"));
         lift = hardwareMap.get(DcMotorEx.class, "lift");
-        spinner = hardwareMap.get(DcMotor.class, "spinner");
+        spinner2 = hardwareMap.get(DcMotor.class, "spinner2");
         leftServo = hardwareMap.get(Servo.class, "pushServo");
         rightServo = hardwareMap.get(Servo.class,"platServo");
         midServo = hardwareMap.get(Servo.class, "midServo");
@@ -71,28 +71,33 @@ public class RedStorage extends LinearOpMode {
         //Auto Commands
         dt.driveDistance(-4,500,opModeIsActive());
         dt.strafeDistance(-3.5, 500, opModeIsActive());
-        spinner.setPower(1);
+        spinner2.setPower(-1);
         sleep(2000);
-        spinner.setPower(0);
+        spinner2.setPower(0);
         dt.strafeDistance(19,500,opModeIsActive());
-        dt.driveDistance(6,500,opModeIsActive());
-        dt.driveDistance(-15.5,500,opModeIsActive());
+        dt.driveDistance(-10,500,opModeIsActive());
+        telemetry.addData("Distance: ", color2.getDistance(DistanceUnit.INCH));
+        telemetry.update();
         if(seesMarker()){
             telemetry.addData("Distance: ", color2.getDistance(DistanceUnit.INCH));
             telemetry.update();
-            level = 1;
+            level = 3;
         }
         dt.strafeDistance(-8.5, 500, opModeIsActive());
+        telemetry.addData("Distance: ", color2.getDistance(DistanceUnit.INCH));
+        telemetry.update();
         if(seesMarker()){
             telemetry.addData("Distance: ", color2.getDistance(DistanceUnit.INCH));
             telemetry.update();
             level = 2;
         }
         dt.strafeDistance(-8.5, 500, opModeIsActive());
+        telemetry.addData("Distance: ", color2.getDistance(DistanceUnit.INCH));
+        telemetry.update();
         if(seesMarker()){
             telemetry.addData("Distance: ", color2.getDistance(DistanceUnit.INCH));
             telemetry.update();
-            level = 3;
+            level = 1;
         }
         telemetry.addData("Level: ", level);
         telemetry.update();
@@ -109,7 +114,7 @@ public class RedStorage extends LinearOpMode {
         }else if(level==3){
             dt.driveDistance(4.5,500,opModeIsActive());
         }
-
+        dt.strafeDistance(-2,500,opModeIsActive());
         //Drop lift and back up at the same time
         lift.setTargetPosition(0);
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -126,7 +131,7 @@ public class RedStorage extends LinearOpMode {
         while(dt.fr.isBusy() && opModeIsActive()){}
 //        liftToLevel(0);
 //        dt.driveDistance(29,1000,opModeIsActive());
-        dt.strafeDistance(10,1000,opModeIsActive());
+        dt.strafeDistance(13,1000,opModeIsActive());
         while(opModeIsActive()){
         }
     }
@@ -217,7 +222,7 @@ public class RedStorage extends LinearOpMode {
             lift.setTargetPosition(1100);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             lift.setVelocity(600);
-            dt.driveDistance(-2.5,200,opModeIsActive());
+            dt.driveDistance(-2.25,200,opModeIsActive());
         }
         //Default to lowest position
         else if(level == 0) {

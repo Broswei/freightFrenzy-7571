@@ -66,28 +66,20 @@ private ElapsedTime timer=new ElapsedTime();
         /***********************************\
          | Run lift positions using encoders |
          \***********************************/
-            //Lift base/intake position on a or if intaking
-            if(gamepad2.a || isIntaking || gamepad2.left_bumper) {
-                lift.setTargetPosition(0);
-                lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                lift.setVelocity(100);
-
-            }
-            //lift level 1 position on b
-            else if(gamepad2.b){
-                lift.setTargetPosition(200);
+            if(gamepad2.b){
+                lift.setTargetPosition(400);
                 lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 lift.setVelocity(600);
             }
             //lift level 2 position on x
             else if(gamepad2.x){
-                lift.setTargetPosition(550);
+                lift.setTargetPosition(600);
                 lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 lift.setVelocity(600);
             }
             //lift level 3 position on y
             else if(gamepad2.y) {
-                lift.setTargetPosition(1000);
+                lift.setTargetPosition(1100);
                 lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 lift.setVelocity(600);
             }
@@ -124,7 +116,23 @@ private ElapsedTime timer=new ElapsedTime();
             rightServo.setPosition(0);
         }
 
+        if(gamepad2.dpad_down) {
+            lift.setTargetPosition(340);
+            lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            lift.setVelocity(600);
+        }
+        if(gamepad2.dpad_up) {
+            lift.setTargetPosition(1300);
+            lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            lift.setVelocity(600);
+        }
+        if(gamepad2.a){
+            leftServo.setPosition(0.15);
+            rightServo.setPosition(0.4);
+        }
+
         spinner.setPower(gamepad1.right_trigger);
+        spinner2.setPower(gamepad1.right_trigger);
 
 
         telemetry.update();

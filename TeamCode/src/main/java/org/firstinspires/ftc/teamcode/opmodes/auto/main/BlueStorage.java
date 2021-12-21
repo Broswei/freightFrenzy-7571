@@ -76,8 +76,7 @@ public class BlueStorage extends LinearOpMode {
         sleep(2000);
         spinner.setPower(0);
         dt.strafeDistance(-19,500,opModeIsActive());
-        dt.driveDistance(6,500,opModeIsActive());
-        dt.driveDistance(-15.5,500,opModeIsActive());
+        dt.driveDistance(-9.5,500,opModeIsActive());
         if(seesMarker()){
             telemetry.addData("Distance: ", color.getDistance(DistanceUnit.INCH));
             telemetry.update();
@@ -101,7 +100,7 @@ public class BlueStorage extends LinearOpMode {
         dt.strafeDistance(-20,750,opModeIsActive());
         dt.driveDistance(4,500,opModeIsActive());
         turnDegrees(88,250);
-        dt.strafeDistance(25,750,opModeIsActive());
+        dt.strafeDistance(26,750,opModeIsActive());
         liftToLevel(level);
 
         deposit();
@@ -110,7 +109,7 @@ public class BlueStorage extends LinearOpMode {
         }else if(level==3){
             dt.driveDistance(4.5,500,opModeIsActive());
         }
-
+        dt.strafeDistance(2,500,opModeIsActive());
         //Drop lift and back up at the same time
         lift.setTargetPosition(0);
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -127,7 +126,7 @@ public class BlueStorage extends LinearOpMode {
         while(dt.fr.isBusy() && opModeIsActive()){}
 //        liftToLevel(0);
 //        dt.driveDistance(29,1000,opModeIsActive());
-        dt.strafeDistance(-10,1000,opModeIsActive());
+        dt.strafeDistance(-13,1000,opModeIsActive());
         while(opModeIsActive()){
         }
     }
@@ -202,7 +201,7 @@ public class BlueStorage extends LinearOpMode {
     //Lift commands
     public void liftToLevel(int level){
         if(level == 1){
-            lift.setTargetPosition(350);
+            lift.setTargetPosition(450);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             lift.setVelocity(600);
             dt.driveDistance(1,200,opModeIsActive());
