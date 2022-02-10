@@ -74,13 +74,8 @@ public class RedStorage extends LinearOpMode {
         spinner2.setPower(-.8);
         sleep(2500);
         spinner2.setPower(0);
-<<<<<<< HEAD
         dt.strafeDistance(18.5,500,opModeIsActive());
         dt.driveDistance(-10,500,opModeIsActive());
-=======
-        dt.strafeDistance(17.5,500,opModeIsActive());
-        dt.driveDistance(-10.5,500,opModeIsActive());
->>>>>>> 53eba43926a359e07c2f23c662e3a7a7c2a95847
         telemetry.addData("Distance: ", color2.getDistance(DistanceUnit.INCH));
         telemetry.update();
         if(seesMarker()){

@@ -42,9 +42,6 @@ public class BlueWarehouse extends LinearOpMode {
     public RevColorSensorV3 distR;
     public RevColorSensorV3 distL;
 
-    public RevColorSensorV3 distR;
-    public RevColorSensorV3 distL;
-
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_DM.tflite";
     private static final String[] LABELS = {
             "Duck",
@@ -71,13 +68,8 @@ public class BlueWarehouse extends LinearOpMode {
         magLim = hardwareMap.get(TouchSensor.class, "magLim");
         color = hardwareMap.get(RevColorSensorV3.class,"color");
 
-<<<<<<< HEAD
         //distR = hardwareMap.get(RevColorSensorV3.class, "distanceR");
         //distL = hardwareMap.get(RevColorSensorV3.class, "distanceL");
-=======
-        distR = hardwareMap.get(RevColorSensorV3.class, "distanceR");
-        distL = hardwareMap.get(RevColorSensorV3.class, "distanceL");
->>>>>>> 53eba43926a359e07c2f23c662e3a7a7c2a95847
 
         dt.initMotors(motors);
         dt.initGyro(gyro);

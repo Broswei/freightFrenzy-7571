@@ -76,11 +76,7 @@ public class BlueStorage extends LinearOpMode {
         sleep(2000);
         spinner.setPower(0);
         dt.strafeDistance(-20.5,500,opModeIsActive());
-<<<<<<< HEAD
         dt.driveDistance(-11,500,opModeIsActive());
-=======
-        dt.driveDistance(-9.5,500,opModeIsActive());
->>>>>>> 53eba43926a359e07c2f23c662e3a7a7c2a95847
         if(seesMarker()){
             telemetry.addData("Distance: ", color.getDistance(DistanceUnit.INCH));
             telemetry.update();

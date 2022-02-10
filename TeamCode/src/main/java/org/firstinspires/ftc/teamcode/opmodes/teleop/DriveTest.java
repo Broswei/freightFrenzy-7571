@@ -2,23 +2,18 @@ package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.lib.hardware.base.Robot;
-import org.firstinspires.ftc.teamcode.lib.hardware.manip.Intake;
 
 @TeleOp (group = "DriveTest")
 public class DriveTest extends Robot{
 
-private boolean yButton2Toggle=false;
 
-        boolean test=true;
+        //boolean test=true;
 
         boolean isSlow = false;
 
-private ElapsedTime timer=new ElapsedTime();
+//private ElapsedTime timer=new ElapsedTime();
 
 
     @Override
@@ -40,11 +35,7 @@ private ElapsedTime timer=new ElapsedTime();
     public void loop(){
         super.loop();
 
-        if(gamepad1.left_trigger>=0.01){
-            isSlow=true;
-        }else{
-            isSlow=false;
-        }
+        isSlow= gamepad1.left_trigger >= 0.01;
 
         //Drivetrain control
         dt.manualControl(gamepad1,isSlow);
@@ -81,18 +72,7 @@ private ElapsedTime timer=new ElapsedTime();
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             lift.setVelocity(600);
         }
-//        if(gamepad2.left_bumper){
-//            pushServo.setPosition(.5);
-//        }else{
-//            pushServo.setPosition(1);
-//        }
-//
-//        if (gamepad2.left_trigger > 0){
-//            platServo.setPosition(0.5);
-//        }
-//        else{
-//            platServo.setPosition(0);
-//        }
+
 
         if (gamepad1.right_trigger > 0){
             midServo.setPosition(.5);
