@@ -37,7 +37,13 @@ public class BlueWarehouse extends LinearOpMode {
     public Servo rampServo;
     public TouchSensor magLim;
     public RevColorSensorV3 color;
-    private int level = 1;
+    private int level = 3;
+
+    public RevColorSensorV3 distR;
+    public RevColorSensorV3 distL;
+
+    public RevColorSensorV3 distR;
+    public RevColorSensorV3 distL;
 
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_DM.tflite";
     private static final String[] LABELS = {
@@ -64,6 +70,14 @@ public class BlueWarehouse extends LinearOpMode {
         rampServo = hardwareMap.get(Servo.class, "rampServo");
         magLim = hardwareMap.get(TouchSensor.class, "magLim");
         color = hardwareMap.get(RevColorSensorV3.class,"color");
+
+<<<<<<< HEAD
+        //distR = hardwareMap.get(RevColorSensorV3.class, "distanceR");
+        //distL = hardwareMap.get(RevColorSensorV3.class, "distanceL");
+=======
+        distR = hardwareMap.get(RevColorSensorV3.class, "distanceR");
+        distL = hardwareMap.get(RevColorSensorV3.class, "distanceL");
+>>>>>>> 53eba43926a359e07c2f23c662e3a7a7c2a95847
 
         dt.initMotors(motors);
         dt.initGyro(gyro);
@@ -104,7 +118,8 @@ public class BlueWarehouse extends LinearOpMode {
         }
         liftToLevel(0);
         dt.strafeDistance(22,750,opModeIsActive());
-        dt.driveDistance(60,1000,opModeIsActive());
+        dt.driveDistance(-12,750,opModeIsActive());
+        dt.driveDistance(72,1250,opModeIsActive());
 
         while(opModeIsActive()){
         }
@@ -183,7 +198,7 @@ public class BlueWarehouse extends LinearOpMode {
             lift.setTargetPosition(450);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             lift.setVelocity(600);
-            dt.driveDistance(2,200,opModeIsActive());
+            dt.driveDistance(1.5,200,opModeIsActive());
         }
         //lift level 2 position on x
         else if(level == 2){
@@ -220,6 +235,63 @@ public class BlueWarehouse extends LinearOpMode {
             telemetry.addLine("Depositing");
             telemetry.update();
         }
+        leftServo.setPosition(.55);
+        rightServo.setPosition(0);
+    }
+
+    public void correctPos(){
+
+        lift.setTargetPosition(150);
+        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lift.setVelocity(600);
+
+        leftServo.setPosition(0.15);
+        rightServo.setPosition(0.4);
+
+        //drive forward until one sees
+        dt.setPowers(.1,.1);
+        while(!(rightSees()||leftSees())){}
+        dt.setPowers(0,0);
+
+        //If both see, it is straight and we continue
+        if(rightSees()&&leftSees()){
+            resetLift();
+            return;
+        }
+        //Strafe left until left sees if only right sees
+        else if(rightSees()){
+            dt.strafe(-.1);
+            while(!leftSees()){}
+            dt.strafe(0);
+        }
+
+        //Strafe right until right sees if only left sees
+        else if(leftSees()){
+            dt.strafe(.1);
+            while(!rightSees()){}
+            dt.strafe(0);
+        }
+
+        if(rightSees()&&leftSees()){
+            resetLift();
+            return;
+        }
+
+    }
+
+    public boolean rightSees(){
+        return distR.getDistance(DistanceUnit.INCH) < 1.5;
+    }
+
+    public boolean leftSees(){
+        return distL.getDistance(DistanceUnit.INCH) < 1.5;
+    }
+
+    public void resetLift(){
+        lift.setTargetPosition(0);
+        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lift.setVelocity(300);
+
         leftServo.setPosition(.55);
         rightServo.setPosition(0);
     }

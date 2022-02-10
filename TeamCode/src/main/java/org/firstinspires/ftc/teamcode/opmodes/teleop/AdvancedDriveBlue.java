@@ -13,6 +13,7 @@ public class AdvancedDriveBlue extends Robot{
 private boolean yButton2Toggle=false;
 
         boolean isSlow = false;
+        boolean isFast = false;
         //Changes behavior when intaking
         boolean isIntaking = false;
         int liftZero = 0;
@@ -45,12 +46,17 @@ private ElapsedTime timer=new ElapsedTime();
         if(gamepad1.y){
             gyroOffset = dt.getGyroRotation(AngleUnit.RADIANS);
         }
+        if(gamepad1.a){
+            isFast = true;
+        }else{
+            isFast = false;
+        }
 
         //Strafe drive, slows down when intaking
         if(gamepad1.left_trigger>.1){
         dt.manualControl(gamepad1,isSlow);
         }else{
-        dt.fieldOrientedControl(gamepad1, isSlow, gyroOffset);
+        dt.fieldOrientedControl(gamepad1, isSlow, isFast, gyroOffset);
         }
         //Intake controls
         if(isIntaking){
@@ -87,7 +93,7 @@ private ElapsedTime timer=new ElapsedTime();
             else{
                 lift.setTargetPosition(0);
                 lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                lift.setVelocity(200);
+                lift.setVelocity(300);
             }
         //Drop down ramp when intaking otherwise hold ramp up
         if(isIntaking){

@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/freightFrenzy-7571.iml" filepath="$PROJECT_DIR$/.idea/modules/freightFrenzy-7571.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/FtcRobotController/freightFrenzy-7571.FtcRobotController.iml" filepath="$PROJECT_DIR$/.idea/modules/FtcRobotController/freightFrenzy-7571.FtcRobotController.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TeamCode/freightFrenzy-7571.TeamCode.iml" filepath="$PROJECT_DIR$/.idea/modules/TeamCode/freightFrenzy-7571.TeamCode.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/freightFrenzy-7571(UpdateTest).iml" filepath="$PROJECT_DIR$/.idea/modules/freightFrenzy-7571(UpdateTest).iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/FtcRobotController/freightFrenzy-7571(UpdateTest).FtcRobotController.iml" filepath="$PROJECT_DIR$/.idea/modules/FtcRobotController/freightFrenzy-7571(UpdateTest).FtcRobotController.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TeamCode/freightFrenzy-7571(UpdateTest).TeamCode.iml" filepath="$PROJECT_DIR$/.idea/modules/TeamCode/freightFrenzy-7571(UpdateTest).TeamCode.iml" />
     </modules>
   </component>
 </project>

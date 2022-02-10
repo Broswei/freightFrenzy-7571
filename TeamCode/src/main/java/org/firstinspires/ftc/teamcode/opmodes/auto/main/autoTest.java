@@ -48,6 +48,9 @@ public class autoTest extends LinearOpMode {
     private int level = 1;
     public RevColorSensorV3 color2;
 
+    public RevColorSensorV3 distR;
+    public RevColorSensorV3 distL;
+
 
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_DM.tflite";
     private static final String[] LABELS = {
@@ -76,20 +79,36 @@ public class autoTest extends LinearOpMode {
         color = hardwareMap.get(RevColorSensorV3.class,"color");
         color2 = hardwareMap.get(RevColorSensorV3.class,"color2");
 
+<<<<<<< HEAD
+        //distR = hardwareMap.get(RevColorSensorV3.class, "distanceR");
+        //distL = hardwareMap.get(RevColorSensorV3.class, "distanceL");
+=======
+        distR = hardwareMap.get(RevColorSensorV3.class, "distanceR");
+        distL = hardwareMap.get(RevColorSensorV3.class, "distanceL");
+>>>>>>> 53eba43926a359e07c2f23c662e3a7a7c2a95847
+
 
         dt.initMotors(motors);
         dt.initGyro(gyro);
         waitForStart();
 
+        dt.setDrivetrainMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        dt.fr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        dt.fl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        dt.br.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        dt.bl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //Auto Commands
+<<<<<<< HEAD
         while(opModeIsActive()){
-            telemetry.addData("Color1: ", seesMarker());
-            telemetry.addData("Color2: ", seesMarker2());
-            telemetry.addData("Color1: ", color.getDistance(DistanceUnit.INCH));
-            telemetry.addData("Color2: ", color2.getDistance(DistanceUnit.INCH));
+            telemetry.addData("fr: ", dt.fr.getCurrentPosition());
+            telemetry.addData("fl: ", dt.fl.getCurrentPosition());
+            telemetry.addData("br: ", dt.br.getCurrentPosition());
+            telemetry.addData("bl: ", dt.bl.getCurrentPosition());
             telemetry.update();
-
         }
+=======
+        driveToHub();
+>>>>>>> 53eba43926a359e07c2f23c662e3a7a7c2a95847
 
 
     }
@@ -214,5 +233,106 @@ public class autoTest extends LinearOpMode {
         }
         leftServo.setPosition(.55);
         rightServo.setPosition(0);
+    }
+
+    public void correctPos(){
+
+        lift.setTargetPosition(110);
+        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lift.setVelocity(600);
+
+        while(lift.isBusy()){}
+
+        leftServo.setPosition(0.15);
+        rightServo.setPosition(0.4);
+
+        //drive forward until one sees
+        while(!(rightSees()||leftSees())){
+            dt.driveDistance(-.5, 200, opModeIsActive());
+
+            telemetry.addData("left: ",  leftSees());
+            telemetry.addData("right: ", rightSees());
+            telemetry.addData("left dist: ", distL.getDistance(DistanceUnit.INCH));
+            telemetry.addData("right dist: ", distR.getDistance(DistanceUnit.INCH));
+            telemetry.update();
+
+        }
+
+
+        //If both see, it is straight and we continue
+        if(rightSees()&&leftSees()){
+            resetLift();
+            return;
+        }
+
+        //Strafe left until left sees if only right sees
+        else if(rightSees()){
+
+            while(!leftSees()){
+                dt.strafeDistance(-0.5,200,opModeIsActive());
+                telemetry.addData("left: ",  leftSees());
+                telemetry.addData("right: ", rightSees());
+                telemetry.addData("left dist: ", distL.getDistance(DistanceUnit.INCH));
+                telemetry.addData("right dist: ", distR.getDistance(DistanceUnit.INCH));
+                telemetry.update();
+            }
+
+        }
+
+        //Strafe right until right sees if only left sees
+        else if(leftSees()){
+            while(!rightSees()){
+                dt.strafeDistance(0.5,200,opModeIsActive());
+                telemetry.addData("left: ",  leftSees());
+                telemetry.addData("right: ", rightSees());
+                telemetry.addData("left dist: ", distL.getDistance(DistanceUnit.INCH));
+                telemetry.addData("right dist: ", distR.getDistance(DistanceUnit.INCH));
+                telemetry.update();
+            }
+
+        }
+
+        if(rightSees()&&leftSees()){
+            resetLift();
+            return;
+        }
+
+    }
+
+    public boolean rightSees(){
+        return distR.getDistance(DistanceUnit.INCH) < 2.4;
+    }
+
+    public boolean leftSees(){
+        return distL.getDistance(DistanceUnit.INCH) < 1.3;
+    }
+
+    public void resetLift(){
+        lift.setTargetPosition(0);
+        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lift.setVelocity(300);
+
+        leftServo.setPosition(.55);
+        rightServo.setPosition(0);
+    }
+
+    public void driveToHub(){
+        lift.setTargetPosition(50);
+        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lift.setVelocity(600);
+        dt.setDrivetrainMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        int ticksForward = 0;
+        while(!rightSees()){
+            ticksForward += 10;
+            dt.setDrivetrainPositions(ticksForward);
+            dt.setDrivetrainMode(DcMotor.RunMode.RUN_TO_POSITION);
+            dt.setDrivetrainVelocity(150);
+
+            telemetry.addData("right: ", rightSees());
+            telemetry.addData("right dist: ", distR.getDistance(DistanceUnit.INCH));
+            telemetry.update();
+        }
+
     }
 }
