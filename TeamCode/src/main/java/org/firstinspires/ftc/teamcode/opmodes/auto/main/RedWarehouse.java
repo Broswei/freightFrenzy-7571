@@ -69,7 +69,7 @@ public class RedWarehouse extends LinearOpMode {
         waitForStart();
 
         //Auto Commands
-        dt.driveDistance(-14.5, 500, opModeIsActive());
+        dt.driveDistance(-15, 500, opModeIsActive());
         if(seesMarker()){
             telemetry.addData("Distance: ", color2.getDistance(DistanceUnit.INCH));
             telemetry.update();
@@ -90,20 +90,21 @@ public class RedWarehouse extends LinearOpMode {
         telemetry.addData("Level: ", level);
         telemetry.update();
 
-        dt.strafeDistance(12.5,750,opModeIsActive());
+        dt.strafeDistance(12,750,opModeIsActive());
         dt.driveDistance(4,500,opModeIsActive());
         turnDegrees(88,250);
         dt.strafeDistance(25,750,opModeIsActive());
         liftToLevel(level);
         deposit();
-        if(level==2){
-            dt.driveDistance(2,500,opModeIsActive());
+        if(level==1){
+            dt.driveDistance(-2,500,opModeIsActive());
         }else if(level==3){
-            dt.driveDistance(4,500,opModeIsActive());
+            dt.driveDistance(2,500,opModeIsActive());
         }
         liftToLevel(0);
-        dt.strafeDistance(-20,750,opModeIsActive());
-        dt.driveDistance(60,1000,opModeIsActive());
+        dt.strafeDistance(-22,750,opModeIsActive());
+        dt.driveDistance(-12, 750, opModeIsActive());
+        dt.driveDistance(72,1250,opModeIsActive());
 
         while(opModeIsActive()){
         }
@@ -191,11 +192,11 @@ public class RedWarehouse extends LinearOpMode {
             lift.setVelocity(600);
         }
         //lift level 3 position on y
-        else if(level ==3) {
+        else if(level == 3) {
             lift.setTargetPosition(1100);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             lift.setVelocity(600);
-            dt.driveDistance(-2.5,200,opModeIsActive());
+            dt.driveDistance(-2,200,opModeIsActive());
         }
         //Default to lowest position
         else if(level == 0) {

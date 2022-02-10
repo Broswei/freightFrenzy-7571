@@ -37,7 +37,10 @@ public class BlueWarehouse extends LinearOpMode {
     public Servo rampServo;
     public TouchSensor magLim;
     public RevColorSensorV3 color;
-    private int level = 1;
+    private int level = 3;
+
+    public RevColorSensorV3 distR;
+    public RevColorSensorV3 distL;
 
     public RevColorSensorV3 distR;
     public RevColorSensorV3 distL;
@@ -68,8 +71,13 @@ public class BlueWarehouse extends LinearOpMode {
         magLim = hardwareMap.get(TouchSensor.class, "magLim");
         color = hardwareMap.get(RevColorSensorV3.class,"color");
 
+<<<<<<< HEAD
+        //distR = hardwareMap.get(RevColorSensorV3.class, "distanceR");
+        //distL = hardwareMap.get(RevColorSensorV3.class, "distanceL");
+=======
         distR = hardwareMap.get(RevColorSensorV3.class, "distanceR");
         distL = hardwareMap.get(RevColorSensorV3.class, "distanceL");
+>>>>>>> 53eba43926a359e07c2f23c662e3a7a7c2a95847
 
         dt.initMotors(motors);
         dt.initGyro(gyro);
@@ -110,7 +118,8 @@ public class BlueWarehouse extends LinearOpMode {
         }
         liftToLevel(0);
         dt.strafeDistance(22,750,opModeIsActive());
-        dt.driveDistance(60,1000,opModeIsActive());
+        dt.driveDistance(-12,750,opModeIsActive());
+        dt.driveDistance(72,1250,opModeIsActive());
 
         while(opModeIsActive()){
         }
@@ -189,7 +198,7 @@ public class BlueWarehouse extends LinearOpMode {
             lift.setTargetPosition(450);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             lift.setVelocity(600);
-            dt.driveDistance(2,200,opModeIsActive());
+            dt.driveDistance(1.5,200,opModeIsActive());
         }
         //lift level 2 position on x
         else if(level == 2){

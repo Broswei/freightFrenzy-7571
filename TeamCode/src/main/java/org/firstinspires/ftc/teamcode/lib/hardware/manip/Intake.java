@@ -24,8 +24,6 @@ public class Intake extends Subsystem {
 
         this.intake = intake;
 
-        this.intake.setDirection(DcMotorSimple.Direction.REVERSE);
-
         this.intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         this.intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

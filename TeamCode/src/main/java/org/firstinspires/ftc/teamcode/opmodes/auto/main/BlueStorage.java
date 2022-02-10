@@ -37,7 +37,7 @@ public class BlueStorage extends LinearOpMode {
     public Servo rampServo;
     public TouchSensor magLim;
     public RevColorSensorV3 color;
-    private int level = 1;
+    private int level = 3;
 
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_DM.tflite";
     private static final String[] LABELS = {
@@ -76,7 +76,11 @@ public class BlueStorage extends LinearOpMode {
         sleep(2000);
         spinner.setPower(0);
         dt.strafeDistance(-20.5,500,opModeIsActive());
+<<<<<<< HEAD
+        dt.driveDistance(-11,500,opModeIsActive());
+=======
         dt.driveDistance(-9.5,500,opModeIsActive());
+>>>>>>> 53eba43926a359e07c2f23c662e3a7a7c2a95847
         if(seesMarker()){
             telemetry.addData("Distance: ", color.getDistance(DistanceUnit.INCH));
             telemetry.update();
@@ -98,7 +102,7 @@ public class BlueStorage extends LinearOpMode {
         telemetry.update();
 
         dt.strafeDistance(-20,750,opModeIsActive());
-        dt.driveDistance(4,500,opModeIsActive());
+        dt.driveDistance(5,500,opModeIsActive());
         turnDegrees(88,250);
         dt.strafeDistance(26,750,opModeIsActive());
         liftToLevel(level);
@@ -107,7 +111,7 @@ public class BlueStorage extends LinearOpMode {
         if(level==2){
             dt.driveDistance(2,500,opModeIsActive());
         }else if(level==3){
-            dt.driveDistance(4.5,500,opModeIsActive());
+            dt.driveDistance(5,500,opModeIsActive());
         }
         dt.strafeDistance(2,500,opModeIsActive());
         //Drop lift and back up at the same time

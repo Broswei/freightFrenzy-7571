@@ -79,16 +79,36 @@ public class autoTest extends LinearOpMode {
         color = hardwareMap.get(RevColorSensorV3.class,"color");
         color2 = hardwareMap.get(RevColorSensorV3.class,"color2");
 
+<<<<<<< HEAD
+        //distR = hardwareMap.get(RevColorSensorV3.class, "distanceR");
+        //distL = hardwareMap.get(RevColorSensorV3.class, "distanceL");
+=======
         distR = hardwareMap.get(RevColorSensorV3.class, "distanceR");
         distL = hardwareMap.get(RevColorSensorV3.class, "distanceL");
+>>>>>>> 53eba43926a359e07c2f23c662e3a7a7c2a95847
 
 
         dt.initMotors(motors);
         dt.initGyro(gyro);
         waitForStart();
 
+        dt.setDrivetrainMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        dt.fr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        dt.fl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        dt.br.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        dt.bl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //Auto Commands
+<<<<<<< HEAD
+        while(opModeIsActive()){
+            telemetry.addData("fr: ", dt.fr.getCurrentPosition());
+            telemetry.addData("fl: ", dt.fl.getCurrentPosition());
+            telemetry.addData("br: ", dt.br.getCurrentPosition());
+            telemetry.addData("bl: ", dt.bl.getCurrentPosition());
+            telemetry.update();
+        }
+=======
         driveToHub();
+>>>>>>> 53eba43926a359e07c2f23c662e3a7a7c2a95847
 
 
     }
