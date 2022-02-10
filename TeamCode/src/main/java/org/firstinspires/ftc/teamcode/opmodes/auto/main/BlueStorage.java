@@ -71,11 +71,11 @@ public class BlueStorage extends LinearOpMode {
 
         //Auto Commands
         dt.driveDistance(-4,500,opModeIsActive());
-        dt.strafeDistance(3.5, 500, opModeIsActive());
+        dt.strafeDistance(5, 500, opModeIsActive());
         spinner.setPower(1);
         sleep(2000);
         spinner.setPower(0);
-        dt.strafeDistance(-19,500,opModeIsActive());
+        dt.strafeDistance(-20.5,500,opModeIsActive());
         dt.driveDistance(-9.5,500,opModeIsActive());
         if(seesMarker()){
             telemetry.addData("Distance: ", color.getDistance(DistanceUnit.INCH));
@@ -211,6 +211,7 @@ public class BlueStorage extends LinearOpMode {
             lift.setTargetPosition(800);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             lift.setVelocity(600);
+            dt.driveDistance(-1,200,opModeIsActive());
         }
         //lift level 3 position on y
         else if(level ==3) {

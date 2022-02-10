@@ -39,6 +39,9 @@ public class BlueWarehouse extends LinearOpMode {
     public RevColorSensorV3 color;
     private int level = 1;
 
+    public RevColorSensorV3 distR;
+    public RevColorSensorV3 distL;
+
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_DM.tflite";
     private static final String[] LABELS = {
             "Duck",
@@ -64,6 +67,9 @@ public class BlueWarehouse extends LinearOpMode {
         rampServo = hardwareMap.get(Servo.class, "rampServo");
         magLim = hardwareMap.get(TouchSensor.class, "magLim");
         color = hardwareMap.get(RevColorSensorV3.class,"color");
+
+        distR = hardwareMap.get(RevColorSensorV3.class, "distanceR");
+        distL = hardwareMap.get(RevColorSensorV3.class, "distanceL");
 
         dt.initMotors(motors);
         dt.initGyro(gyro);
@@ -220,6 +226,63 @@ public class BlueWarehouse extends LinearOpMode {
             telemetry.addLine("Depositing");
             telemetry.update();
         }
+        leftServo.setPosition(.55);
+        rightServo.setPosition(0);
+    }
+
+    public void correctPos(){
+
+        lift.setTargetPosition(150);
+        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lift.setVelocity(600);
+
+        leftServo.setPosition(0.15);
+        rightServo.setPosition(0.4);
+
+        //drive forward until one sees
+        dt.setPowers(.1,.1);
+        while(!(rightSees()||leftSees())){}
+        dt.setPowers(0,0);
+
+        //If both see, it is straight and we continue
+        if(rightSees()&&leftSees()){
+            resetLift();
+            return;
+        }
+        //Strafe left until left sees if only right sees
+        else if(rightSees()){
+            dt.strafe(-.1);
+            while(!leftSees()){}
+            dt.strafe(0);
+        }
+
+        //Strafe right until right sees if only left sees
+        else if(leftSees()){
+            dt.strafe(.1);
+            while(!rightSees()){}
+            dt.strafe(0);
+        }
+
+        if(rightSees()&&leftSees()){
+            resetLift();
+            return;
+        }
+
+    }
+
+    public boolean rightSees(){
+        return distR.getDistance(DistanceUnit.INCH) < 1.5;
+    }
+
+    public boolean leftSees(){
+        return distL.getDistance(DistanceUnit.INCH) < 1.5;
+    }
+
+    public void resetLift(){
+        lift.setTargetPosition(0);
+        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lift.setVelocity(300);
+
         leftServo.setPosition(.55);
         rightServo.setPosition(0);
     }

@@ -89,7 +89,7 @@ private ElapsedTime timer=new ElapsedTime();
             else{
                 lift.setTargetPosition(0);
                 lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                lift.setVelocity(200);
+                lift.setVelocity(300);
             }
         //Drop down ramp when intaking otherwise hold ramp up
         if(isIntaking){
