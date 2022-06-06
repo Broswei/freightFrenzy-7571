@@ -70,13 +70,14 @@ public class CoastalCleanup extends LinearOpMode {
 
         //Auto Commands
         rampServo.setPosition(0.85);
+        midServo.setPosition(0.75);
         dt.driveDistance(70.5,500,opModeIsActive());
         turnDegrees(88.5, 500);
         dt.driveDistance(24, 500, opModeIsActive());
         intake();
         dt.driveDistance(-24,500,opModeIsActive());
         sleep(500);
-        turnDegrees(271.5, 500);
+        turnDegrees(88.5, 500);
         dt.driveDistance(-47.5,500,opModeIsActive());
         push();
         dt.driveDistance(45,500,opModeIsActive());
@@ -130,7 +131,7 @@ public class CoastalCleanup extends LinearOpMode {
         telemetry.addData("corrected degrees", correctedDegrees);
         telemetry.update();
         // 2.3125
-        if(correctedDegrees>=0){
+        if(correctedDegrees>0){
             dt.setDrivetrainPositions(-predictedTicks,predictedTicks,-predictedTicks,predictedTicks);
             dt.setDrivetrainMode(DcMotor.RunMode.RUN_TO_POSITION);
             dt.setDrivetrainVelocity(velocity);

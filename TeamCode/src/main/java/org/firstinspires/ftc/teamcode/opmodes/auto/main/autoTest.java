@@ -94,11 +94,10 @@ public class autoTest extends LinearOpMode {
         dt.bl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //Auto Commands
         while(opModeIsActive()){
-            telemetry.addData("fr: ", dt.fr.getCurrentPosition());
-            telemetry.addData("fl: ", dt.fl.getCurrentPosition());
-            telemetry.addData("br: ", dt.br.getCurrentPosition());
-            telemetry.addData("bl: ", dt.bl.getCurrentPosition());
-            telemetry.update();
+            turnDegrees(-88.5,500);
+            sleep(100);
+            turnDegrees(88.5, 500);
+            sleep(100);
         }
 
 
