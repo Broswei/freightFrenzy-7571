@@ -94,9 +94,9 @@ public class autoTest extends LinearOpMode {
         dt.bl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //Auto Commands
         while(opModeIsActive()){
-            turnDegrees(-88.5,500);
+            dt.strafeDistance(-12,500,opModeIsActive());
             sleep(100);
-            turnDegrees(88.5, 500);
+            dt.strafeDistance(12,500,opModeIsActive());
             sleep(100);
         }
 

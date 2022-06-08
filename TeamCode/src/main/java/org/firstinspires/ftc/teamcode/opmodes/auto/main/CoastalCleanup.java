@@ -71,16 +71,16 @@ public class CoastalCleanup extends LinearOpMode {
         //Auto Commands
         rampServo.setPosition(0.85);
         midServo.setPosition(0.75);
-        dt.driveDistance(70.5,500,opModeIsActive());
-        turnDegrees(88.5, 500);
-        dt.driveDistance(24, 500, opModeIsActive());
+        dt.driveDistance(70.5,750,opModeIsActive());
+        turnDegrees(88.5, 250);
+        dt.driveDistance(24, 750, opModeIsActive());
         intake();
-        dt.driveDistance(-24,500,opModeIsActive());
+        dt.driveDistance(-24,750,opModeIsActive());
         sleep(500);
-        turnDegrees(88.5, 500);
-        dt.driveDistance(-47.5,500,opModeIsActive());
+        turnDegrees(-88.5, 250);
+        dt.driveDistance(-53.5,750,opModeIsActive());
         push();
-        dt.driveDistance(45,500,opModeIsActive());
+        dt.driveDistance(51,750,opModeIsActive());
         dt.strafeDistance(12,500,opModeIsActive());
         while (opModeIsActive()){
 
@@ -127,10 +127,6 @@ public class CoastalCleanup extends LinearOpMode {
         if(correctedDegrees>180){
             correctedDegrees-=360;
         }
-
-        telemetry.addData("corrected degrees", correctedDegrees);
-        telemetry.update();
-        // 2.3125
         if(correctedDegrees>0){
             dt.setDrivetrainPositions(-predictedTicks,predictedTicks,-predictedTicks,predictedTicks);
             dt.setDrivetrainMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -155,10 +151,8 @@ public class CoastalCleanup extends LinearOpMode {
             }
 
         }
-
         dt.setDrivetrainMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        telemetry.addData("Wadadad", "doo");
-        telemetry.update();
+
     }
 
     //Lift commands
