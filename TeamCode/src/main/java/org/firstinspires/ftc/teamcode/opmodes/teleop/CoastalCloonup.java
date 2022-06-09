@@ -39,9 +39,9 @@ private ElapsedTime timer=new ElapsedTime();
         super.loop();
 
         //Sets if we are intaking or not
-        isIntaking = gamepad2.right_trigger>.1;
+        isIntaking = gamepad1.right_trigger>.1;
 
-        isSlow = gamepad1.left_trigger>.01 || gamepad1.right_trigger>.01;
+        isSlow = gamepad1.left_trigger>.01;
 
         if(gamepad1.y){
             gyroOffset = dt.getGyroRotation(AngleUnit.RADIANS);
@@ -60,58 +60,37 @@ private ElapsedTime timer=new ElapsedTime();
         }
         //Intake controls
         if(isIntaking){
-            intake.setPower(-1);
-        }else if(gamepad2.right_bumper){
-            intake.setPower(1);
+            if (gamepad1.b){
+                intake.setPower(-1);
+            }
+            else {
+                intake.setPower(-0.8);
+            }
+        }else if(gamepad1.right_bumper){
+            intake.setPower(0.8);
         }else{
             intake.setPower(0);
         }
 
-        
+
         //Drop down ramp when intaking otherwise hold ramp up
         if(isIntaking){
-            if(gamepad2.right_bumper){
+            if(gamepad1.right_bumper){
                 rampServo.setPosition(.9);
             }else {
                 rampServo.setPosition(.8);
             }
-        }else if(gamepad2.right_bumper){
+        }else if(gamepad1.right_bumper){
             rampServo.setPosition(.8);
         }else{
             rampServo.setPosition(.9);
         }
 
-        if(gamepad2.left_bumper){
+        if(gamepad1.left_bumper){
             midServo.setPosition(.1);
         }else{
             midServo.setPosition(.75);
         }
-
-        if(gamepad2.left_trigger >.01){
-            leftServo.setPosition(0);
-            rightServo.setPosition(.55);
-        }else{
-            leftServo.setPosition(.55);
-            rightServo.setPosition(0);
-        }
-
-        if(gamepad2.dpad_down) {
-            lift.setTargetPosition(340);
-            lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            lift.setVelocity(600);
-        }
-        if(gamepad2.dpad_up) {
-            lift.setTargetPosition(1300);
-            lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            lift.setVelocity(600);
-        }
-        if(gamepad2.a){
-            leftServo.setPosition(0.15);
-            rightServo.setPosition(0.4);
-        }
-
-        spinner.setPower(gamepad1.right_trigger);
-        spinner2.setPower(gamepad1.right_trigger);
 
 
         telemetry.update();

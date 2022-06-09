@@ -127,10 +127,12 @@ public class CoastalCleanup extends LinearOpMode {
         if(correctedDegrees>180){
             correctedDegrees-=360;
         }
-        if(correctedDegrees>0){
+
+        if(turnDegrees >= 0){
             dt.setDrivetrainPositions(-predictedTicks,predictedTicks,-predictedTicks,predictedTicks);
             dt.setDrivetrainMode(DcMotor.RunMode.RUN_TO_POSITION);
             dt.setDrivetrainVelocity(velocity);
+
             while(correctedDegrees-degreeOffset>dt.getGyroRotation(AngleUnit.DEGREES)&&opModeIsActive()){
                 telemetry.addLine("Running left");
                 telemetry.addData("gyro Target: ", correctedDegrees);
@@ -138,10 +140,11 @@ public class CoastalCleanup extends LinearOpMode {
                 telemetry.addData("Offset: ", offset);
                 telemetry.update();
             }
-        }else if(correctedDegrees<0){
+        }else if(turnDegrees < 0){
             dt.setDrivetrainPositions(predictedTicks,-predictedTicks,predictedTicks,-predictedTicks);
             dt.setDrivetrainMode(DcMotor.RunMode.RUN_TO_POSITION);
             dt.setDrivetrainVelocity(velocity);
+
             while(correctedDegrees+degreeOffset<dt.getGyroRotation(AngleUnit.DEGREES)&&opModeIsActive()){
                 telemetry.addLine("Running right");
                 telemetry.addData("gyro: ", dt.getGyroRotation(AngleUnit.DEGREES));
@@ -207,7 +210,7 @@ public class CoastalCleanup extends LinearOpMode {
     //intake command
 
     public void intake(){
-        intake.setPower(-1);
+        intake.setPower(-0.93);
         rampServo.setPosition(0.8);
         sleep(1500);
         intake.setPower(0);
