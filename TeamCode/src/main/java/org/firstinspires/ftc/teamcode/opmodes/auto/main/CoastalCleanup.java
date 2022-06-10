@@ -210,7 +210,7 @@ public class CoastalCleanup extends LinearOpMode {
     //intake command
 
     public void intake(){
-        intake.setPower(-0.93);
+        intake.setPower(-0.91);
         rampServo.setPosition(0.8);
         sleep(1500);
         intake.setPower(0);
