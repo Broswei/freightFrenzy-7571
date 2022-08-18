@@ -72,23 +72,23 @@ public class BlueStorage extends LinearOpMode {
         //Auto Commands
         dt.driveDistance(-4,500,opModeIsActive());
         dt.strafeDistance(5, 500, opModeIsActive());
-        spinner.setPower(1);
-        sleep(2000);
+        spinner.setPower(0.8);
+        sleep(2500);
         spinner.setPower(0);
         dt.strafeDistance(-20.5,500,opModeIsActive());
-        dt.driveDistance(-11,500,opModeIsActive());
+        dt.driveDistance(-10.5,500,opModeIsActive());
         if(seesMarker()){
             telemetry.addData("Distance: ", color.getDistance(DistanceUnit.INCH));
             telemetry.update();
             level = 1;
-        }
+        }/*
         dt.strafeDistance(8.5, 500, opModeIsActive());
         if(seesMarker()){
             telemetry.addData("Distance: ", color.getDistance(DistanceUnit.INCH));
             telemetry.update();
             level = 2;
-        }
-        dt.strafeDistance(8.5, 500, opModeIsActive());
+        }*/
+        dt.strafeDistance(17, 500, opModeIsActive());
         if(seesMarker()){
             telemetry.addData("Distance: ", color.getDistance(DistanceUnit.INCH));
             telemetry.update();
@@ -97,7 +97,7 @@ public class BlueStorage extends LinearOpMode {
         telemetry.addData("Level: ", level);
         telemetry.update();
 
-        dt.strafeDistance(-20,750,opModeIsActive());
+        dt.strafeDistance(-21.5,750,opModeIsActive());
         dt.driveDistance(5,500,opModeIsActive());
         turnDegrees(88,250);
         dt.strafeDistance(26,750,opModeIsActive());
@@ -126,7 +126,12 @@ public class BlueStorage extends LinearOpMode {
         while(dt.fr.isBusy() && opModeIsActive()){}
 //        liftToLevel(0);
 //        dt.driveDistance(29,1000,opModeIsActive());
-        dt.strafeDistance(-13,1000,opModeIsActive());
+        if (level == 3){
+            dt.strafeDistance(-13,1000,opModeIsActive());
+        }
+        else if (level == 1){
+            dt.strafeDistance(13,1000, opModeIsActive());
+        }
         while(opModeIsActive()){
         }
     }
@@ -204,7 +209,7 @@ public class BlueStorage extends LinearOpMode {
             lift.setTargetPosition(450);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             lift.setVelocity(600);
-            dt.driveDistance(1,200,opModeIsActive());
+            dt.driveDistance(0.5,200,opModeIsActive());
         }
         //lift level 2 position on x
         else if(level == 2){
@@ -218,7 +223,7 @@ public class BlueStorage extends LinearOpMode {
             lift.setTargetPosition(1100);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             lift.setVelocity(600);
-            dt.driveDistance(-2.5,200,opModeIsActive());
+            dt.driveDistance(-3,200,opModeIsActive());
         }
         //Default to lowest position
         else if(level == 0) {

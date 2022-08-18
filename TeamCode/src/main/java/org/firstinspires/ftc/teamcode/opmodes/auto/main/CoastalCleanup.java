@@ -71,17 +71,17 @@ public class CoastalCleanup extends LinearOpMode {
         //Auto Commands
         rampServo.setPosition(0.85);
         midServo.setPosition(0.75);
-        dt.driveDistance(70.5,750,opModeIsActive());
-        turnDegrees(88.5, 250);
-        dt.driveDistance(24, 750, opModeIsActive());
+        dt.driveDistance(70.5,1000,opModeIsActive());
+        turnDegrees(88.5, 400);
+        dt.driveDistance(24, 1000, opModeIsActive());
         intake();
-        dt.driveDistance(-24,750,opModeIsActive());
+        dt.driveDistance(-24,1000,opModeIsActive());
         sleep(500);
-        turnDegrees(-88.5, 250);
-        dt.driveDistance(-53.5,750,opModeIsActive());
+        turnDegrees(-88.5, 400);
+        dt.driveDistance(-53.5,1000,opModeIsActive());
         push();
-        dt.driveDistance(51,750,opModeIsActive());
-        dt.strafeDistance(12,500,opModeIsActive());
+        dt.driveDistance(51,1000,opModeIsActive());
+        dt.strafeDistance(12,750,opModeIsActive());
         while (opModeIsActive()){
 
         }

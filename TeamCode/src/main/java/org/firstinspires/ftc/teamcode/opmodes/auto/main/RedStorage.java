@@ -75,7 +75,7 @@ public class RedStorage extends LinearOpMode {
         sleep(2500);
         spinner2.setPower(0);
         dt.strafeDistance(18.5,500,opModeIsActive());
-        dt.driveDistance(-10,500,opModeIsActive());
+        dt.driveDistance(-10.25,500,opModeIsActive());
         telemetry.addData("Distance: ", color2.getDistance(DistanceUnit.INCH));
         telemetry.update();
         if(seesMarker()){
@@ -83,15 +83,15 @@ public class RedStorage extends LinearOpMode {
             telemetry.update();
             level = 3;
         }
-        dt.strafeDistance(-8.5, 500, opModeIsActive());
+/*        dt.strafeDistance(-8.5, 500, opModeIsActive());
         telemetry.addData("Distance: ", color2.getDistance(DistanceUnit.INCH));
         telemetry.update();
         if(seesMarker()){
             telemetry.addData("Distance: ", color2.getDistance(DistanceUnit.INCH));
             telemetry.update();
             level = 2;
-        }
-        dt.strafeDistance(-8.5, 500, opModeIsActive());
+        }*/
+        dt.strafeDistance(-17.5, 400, opModeIsActive());
         telemetry.addData("Distance: ", color2.getDistance(DistanceUnit.INCH));
         telemetry.update();
         if(seesMarker()){
@@ -102,10 +102,10 @@ public class RedStorage extends LinearOpMode {
         telemetry.addData("Level: ", level);
         telemetry.update();
 
-        dt.strafeDistance(20,750,opModeIsActive());
+        dt.strafeDistance(18.5,750,opModeIsActive());
         dt.driveDistance(4,500,opModeIsActive());
         turnDegrees(-88,250);
-        dt.strafeDistance(-25,750,opModeIsActive());
+        dt.strafeDistance(-27,750,opModeIsActive());
         liftToLevel(level);
 
         deposit();
@@ -131,7 +131,12 @@ public class RedStorage extends LinearOpMode {
         while(dt.fr.isBusy() && opModeIsActive()){}
 //        liftToLevel(0);
 //        dt.driveDistance(29,1000,opModeIsActive());
-        dt.strafeDistance(15,1000,opModeIsActive());
+        if (level == 3){
+            dt.strafeDistance(16,1000,opModeIsActive());
+        }
+        else if(level == 1){
+            dt.strafeDistance(-11.5,1000,opModeIsActive());
+        }
         while(opModeIsActive()){
         }
     }
@@ -219,10 +224,10 @@ public class RedStorage extends LinearOpMode {
         }
         //lift level 3 position on y
         else if(level ==3) {
-            lift.setTargetPosition(1100);
+            lift.setTargetPosition(1150);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             lift.setVelocity(600);
-            dt.driveDistance(-2.25,200,opModeIsActive());
+            dt.driveDistance(-3,200,opModeIsActive());
         }
         //Default to lowest position
         else if(level == 0) {
